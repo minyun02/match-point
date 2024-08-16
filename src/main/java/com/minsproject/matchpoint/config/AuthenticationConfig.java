@@ -1,9 +1,6 @@
-package com.minsproject.league.config;
+package com.minsproject.matchpoint.config;
 
-import com.minsproject.league.config.filter.JwtTokenFilter;
-import com.minsproject.league.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,17 +10,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class AuthenticationConfig {
 
-    @Value("${jwt.secret-key}")
-    private String key;
-
-    private final UserService userService;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -52,7 +45,13 @@ public class AuthenticationConfig {
             .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .addFilterBefore(new JwtTokenFilter(key, userService), UsernamePasswordAuthenticationFilter.class)
+            .oauth2Login(oAuth -> oAuth
+                    .userInfoEndpoint(userInfo -> userInfo
+                            .userService(customOAuth2UserService)
+                    )
+                    .defaultSuccessUrl("/", true)
+                    .permitAll()
+            )
         ;
 
         return http.build();
