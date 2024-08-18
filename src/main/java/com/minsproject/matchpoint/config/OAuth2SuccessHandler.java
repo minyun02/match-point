@@ -1,6 +1,6 @@
 package com.minsproject.matchpoint.config;
 
-import com.minsproject.matchpoint.util.JwtTokenProvider;
+import com.minsproject.matchpoint.config.jwt.JwtTokenProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,8 +18,6 @@ import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
-
-    private static final String URI = "/auth/success";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

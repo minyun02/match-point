@@ -1,6 +1,6 @@
 package com.minsproject.matchpoint.config;
 
-import com.minsproject.matchpoint.config.filter.JwtTokenFilter;
+import com.minsproject.matchpoint.config.jwt.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
