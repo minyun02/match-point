@@ -1,4 +1,4 @@
-package com.minsproject.matchpoint.util;
+package com.minsproject.matchpoint.config.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -25,9 +25,15 @@ public class JwtTokenProvider {
     private Long expiredTimeMs;
 
     private static final String BEARER_PREFIX = "Bearer= ";
+    private static final String CLAIMS_EMAIL = "email";
+    private static final String CLAIMS_PROVIDER = "provider";
 
-    public String getUserEmail(String token) {
-        return extractClaims(token).get("email", String.class);
+    public String getClaimsEmail(String token) {
+        return extractClaims(token).get(CLAIMS_EMAIL, String.class);
+    }
+
+    public String getClaimsProvider(String token) {
+        return extractClaims(token).get(CLAIMS_PROVIDER, String.class);
     }
 
     public boolean validateToken(String token) {
@@ -58,8 +64,8 @@ public class JwtTokenProvider {
         DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
         Claims claims = Jwts.claims();
-        claims.put("email", oAuth2User.getAttributes().get("email"));
-        claims.put("provider", ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId());
+        claims.put(CLAIMS_EMAIL, oAuth2User.getAttributes().get(CLAIMS_EMAIL));
+        claims.put(CLAIMS_PROVIDER, ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId());
 
         return BEARER_PREFIX + Jwts.builder()
                 .setClaims(claims)

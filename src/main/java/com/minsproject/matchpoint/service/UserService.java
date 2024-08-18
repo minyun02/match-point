@@ -16,8 +16,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserDTO loadUserByUserEmail(String email) {
-        return userRepository.findByEmail(email).map(UserDTO::fromEntity).orElseThrow(() -> new LeagueCustomException(ErrorCode.USER_NOT_FOUND));
+    public UserDTO loadUserByEmailAndProvider(String email, String provider) {
+        return userRepository.findByEmailAndProvider(email, provider).map(UserDTO::fromEntity).orElseThrow(() -> new LeagueCustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     public User getUserById(Long userId) {
