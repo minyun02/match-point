@@ -22,6 +22,9 @@ public class User extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String provider;
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
@@ -31,9 +34,10 @@ public class User extends BaseEntity {
     private UserStatus status;
 
     @Builder
-    public User(String name, String email, UserRole role, UserStatus status) {
+    public User(String name, String email, String provider, UserRole role, UserStatus status) {
         this.name = name;
         this.email = email;
+        this.provider = provider;
         this.role = role;
         this.status = status;
     }
@@ -47,5 +51,4 @@ public class User extends BaseEntity {
     public String getRoleKey() {
         return this.role.getKey();
     }
-
 }
