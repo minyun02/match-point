@@ -1,7 +1,6 @@
 package com.minsproject.matchpoint.config;
 
 import com.minsproject.matchpoint.config.jwt.JwtTokenProvider;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String accessToken = jwtTokenProvider.generateToken(authentication);
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        String accessToken = jwtTokenProvider.generateAccessToken(authentication);
+        jwtTokenProvider.generateRefreshToken(authentication, accessToken);
 
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write("{\"token\":\"" + accessToken + "\"}");

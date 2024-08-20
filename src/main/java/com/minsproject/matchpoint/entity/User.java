@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @Entity(name = "users")
@@ -33,6 +36,8 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    private Timestamp lastLoginDate;
+
     @Builder
     public User(String name, String email, String provider, UserRole role, UserStatus status) {
         this.name = name;
@@ -42,8 +47,8 @@ public class User extends BaseEntity {
         this.status = status;
     }
 
-    public User update(String name) {
-        this.name = name;
+    public User updateLastLoginDate() {
+        this.lastLoginDate = Timestamp.valueOf(LocalDateTime.now());
 
         return this;
     }

@@ -39,21 +39,20 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         try {
-            final String token = header.split(" ")[1].trim();
+            String token = header.split(" ")[1].trim();
 
             if (!jwtTokenProvider.validateToken(token)) {
-                return;
+                token = jwtTokenProvider.generateNewAccessToken(token);
             }
 
             String email = jwtTokenProvider.getClaimsEmail(token);
             String provider = jwtTokenProvider.getClaimsProvider(token);
             UserDTO user = userService.loadUserByEmailAndProvider(email, provider);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
 
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
         } catch (RuntimeException e) {
             log.error("Error occurs while validating {}", e.toString());
             filterChain.doFilter(request, response);
