@@ -2,7 +2,7 @@ package com.minsproject.matchpoint.service;
 
 import com.minsproject.matchpoint.entity.UserToken;
 import com.minsproject.matchpoint.exception.ErrorCode;
-import com.minsproject.matchpoint.exception.LeagueCustomException;
+import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,12 +31,12 @@ public class TokenService {
     }
 
     public UserToken getTokenByAccessToken(String accessToken) {
-        return tokenRepository.findByAccessToken(accessToken).orElseThrow(() -> new LeagueCustomException(ErrorCode.TOKEN_NOU_FOUND));
+        return tokenRepository.findByAccessToken(accessToken).orElseThrow(() -> new MatchPointException(ErrorCode.TOKEN_NOU_FOUND));
     }
 
     public void updateAccessToken(String newAccessToken, String email, String provider) {
         UserToken userToken = getByEmailAndProvider(email, provider)
-                .orElseThrow(() -> new LeagueCustomException(ErrorCode.TOKEN_NOU_FOUND));
+                .orElseThrow(() -> new MatchPointException(ErrorCode.TOKEN_NOU_FOUND));
 
         userToken.updateAccessToken(newAccessToken);
 

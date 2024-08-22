@@ -12,7 +12,7 @@ import com.minsproject.matchpoint.entity.TeamMember;
 import com.minsproject.matchpoint.repository.TeamMemberRepository;
 import com.minsproject.matchpoint.repository.TeamRepository;
 import com.minsproject.matchpoint.exception.ErrorCode;
-import com.minsproject.matchpoint.exception.LeagueCustomException;
+import com.minsproject.matchpoint.exception.MatchPointException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +39,9 @@ public class TeamService {
     public TeamResponse modify(Long teamId, TeamModifyRequest request, UserDTO user) {
         Team team = getTeamOrThrow(teamId);
 
-        TeamMember member = teamMemberRepository.findByTeamIdAndUserId(teamId, user.getUserId()).orElseThrow(() -> new LeagueCustomException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
+        TeamMember member = teamMemberRepository.findByTeamIdAndUserId(teamId, user.getUserId()).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
         if (member.getRole() != TeamMemberRole.OWNER) {
-            throw new LeagueCustomException(ErrorCode.MODIFICATION_NOT_ALLOWED);
+            throw new MatchPointException(ErrorCode.MODIFICATION_NOT_ALLOWED);
         }
 
         Sport sport = sportService.getSportsById(request.getSportsId());
@@ -54,9 +54,9 @@ public class TeamService {
     public void delete(Long teamId, UserDTO user) {
         Team team = getTeamOrThrow(teamId);
 
-        TeamMember member = teamMemberRepository.findByTeamIdAndUserId(teamId, user.getUserId()).orElseThrow(() -> new LeagueCustomException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
+        TeamMember member = teamMemberRepository.findByTeamIdAndUserId(teamId, user.getUserId()).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
         if (member.getRole() != TeamMemberRole.OWNER) {
-            throw new LeagueCustomException(ErrorCode.DELETING_NOT_ALLOWED);
+            throw new MatchPointException(ErrorCode.DELETING_NOT_ALLOWED);
         }
 
         team.delete();
@@ -65,6 +65,6 @@ public class TeamService {
     }
 
     private Team getTeamOrThrow(Long teamId) {
-        return teamRepository.findById(teamId).orElseThrow(() -> new LeagueCustomException(ErrorCode.TEAM_NOT_FOUND));
+        return teamRepository.findById(teamId).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_NOT_FOUND));
     }
 }

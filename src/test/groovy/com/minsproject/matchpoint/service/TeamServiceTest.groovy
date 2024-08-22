@@ -12,7 +12,7 @@ import com.minsproject.matchpoint.entity.Team
 import com.minsproject.matchpoint.entity.TeamMember
 import com.minsproject.matchpoint.entity.User
 import com.minsproject.matchpoint.exception.ErrorCode
-import com.minsproject.matchpoint.exception.LeagueCustomException
+import com.minsproject.matchpoint.exception.MatchPointException
 import com.minsproject.matchpoint.repository.SportRepository
 import com.minsproject.matchpoint.repository.TeamMemberRepository
 import com.minsproject.matchpoint.repository.TeamRepository
@@ -82,7 +82,7 @@ class TeamServiceTest extends Specification {
         teamService.create(teamCreateReq)
 
         then:
-        def exception = thrown(LeagueCustomException)
+        def exception = thrown(MatchPointException)
         exception.errorCode == ErrorCode.SPORTS_NOT_FOUND
 
     }
@@ -124,7 +124,7 @@ class TeamServiceTest extends Specification {
         teamService.modify(teamId, teamModifyRequest, userDTO)
 
         then:
-        def exception = thrown(LeagueCustomException)
+        def exception = thrown(MatchPointException)
         exception.errorCode == ErrorCode.TEAM_NOT_FOUND
     }
 
@@ -144,7 +144,7 @@ class TeamServiceTest extends Specification {
         teamService.modify(teamId, teamModifyRequest, userDTO)
 
         then:
-        def exception = thrown(LeagueCustomException)
+        def exception = thrown(MatchPointException)
         exception.errorCode == ErrorCode.MODIFICATION_NOT_ALLOWED
     }
 
@@ -165,7 +165,7 @@ class TeamServiceTest extends Specification {
         teamService.modify(teamId, teamModifyRequest, userDTO)
 
         then:
-        def exception = thrown(LeagueCustomException)
+        def exception = thrown(MatchPointException)
         exception.errorCode == ErrorCode.SPORTS_NOT_FOUND
     }
 
