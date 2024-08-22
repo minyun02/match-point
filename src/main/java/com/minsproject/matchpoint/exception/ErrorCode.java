@@ -41,7 +41,9 @@ public enum ErrorCode {
 
     INVALID_MATCH_PLACE(HttpStatus.BAD_REQUEST, "매칭 장소가 없습니다."),
 
-    TOKEN_NOU_FOUND(HttpStatus.NOT_FOUND, "토큰이 없습니다.");
+    TOKEN_NOU_FOUND(HttpStatus.NOT_FOUND, "토큰이 없습니다."),
+
+    WRONG_PROVIDER(HttpStatus.BAD_REQUEST, "소셜로그인에 문제가 발생했습니다.");
 
     private HttpStatus status;
     private String message;
