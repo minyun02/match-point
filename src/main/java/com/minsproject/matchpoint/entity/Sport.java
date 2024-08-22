@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Sports extends BaseEntity {
+public class Sport extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long sportsId;
+    @Column(name = "sport_id")
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -21,8 +22,8 @@ public class Sports extends BaseEntity {
     private Long status;
 
     @Builder
-    private Sports(Long sportsId, String name) {
-        this.sportsId = sportsId;
+    private Sport(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 

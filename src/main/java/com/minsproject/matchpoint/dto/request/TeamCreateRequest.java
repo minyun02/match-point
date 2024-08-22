@@ -1,7 +1,7 @@
 package com.minsproject.matchpoint.dto.request;
 
 import com.minsproject.matchpoint.constant.status.TeamStatus;
-import com.minsproject.matchpoint.entity.Sports;
+import com.minsproject.matchpoint.entity.Sport;
 import com.minsproject.matchpoint.entity.Team;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -50,9 +50,9 @@ public class TeamCreateRequest {
         this.creator = creator;
     }
 
-    public static Team toEntity(TeamCreateRequest dto, Sports sports) {
+    public static Team toEntity(TeamCreateRequest dto, Sport sport) {
         return Team.builder()
-                .sports(sports)
+                .sport(sport)
                 .teamName(dto.getTeamName())
                 .description(dto.getDescription())
                 .fullAddress(dto.getFullAddress())

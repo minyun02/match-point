@@ -6,11 +6,11 @@ import com.minsproject.matchpoint.dto.UserDTO;
 import com.minsproject.matchpoint.dto.request.TeamCreateRequest;
 import com.minsproject.matchpoint.dto.request.TeamModifyRequest;
 import com.minsproject.matchpoint.dto.response.TeamResponse;
+import com.minsproject.matchpoint.entity.Sport;
 import com.minsproject.matchpoint.entity.Team;
 import com.minsproject.matchpoint.entity.TeamMember;
 import com.minsproject.matchpoint.repository.TeamMemberRepository;
 import com.minsproject.matchpoint.repository.TeamRepository;
-import com.minsproject.matchpoint.entity.Sports;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.LeagueCustomException;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.List;
 public class TeamService {
 
     private final TeamRepository teamRepository;
-    private final SportsService sportsService;
+    private final SportService sportService;
     private final TeamMemberRepository teamMemberRepository;
 
     public List<TeamResponse> getTeamList(TeamSearchDTO searchDTO) {
@@ -31,9 +31,9 @@ public class TeamService {
     }
 
     public Long create(TeamCreateRequest request) {
-        Sports sports = sportsService.getSportsById(request.getSportsId());
+        Sport sport = sportService.getSportsById(request.getSportsId());
 
-        return teamRepository.save(TeamCreateRequest.toEntity(request, sports)).getTeamId();
+        return teamRepository.save(TeamCreateRequest.toEntity(request, sport)).getTeamId();
     }
 
     public TeamResponse modify(Long teamId, TeamModifyRequest request, UserDTO user) {
@@ -44,9 +44,9 @@ public class TeamService {
             throw new LeagueCustomException(ErrorCode.MODIFICATION_NOT_ALLOWED);
         }
 
-        Sports sports = sportsService.getSportsById(request.getSportsId());
+        Sport sport = sportService.getSportsById(request.getSportsId());
 
-        team.modifyTeam(request, sports, user.getName());
+        team.modifyTeam(request, sport, user.getName());
 
         return TeamResponse.fromEntity(teamRepository.save(team));
     }
