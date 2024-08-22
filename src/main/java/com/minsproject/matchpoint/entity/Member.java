@@ -1,7 +1,12 @@
 package com.minsproject.matchpoint.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 @Entity
 public class Member {
 
@@ -21,7 +26,7 @@ public class Member {
     @Column(nullable = false)
     private String nickname;
 
-    private String profileImage;
+    private String memberImage;
 
     @Column(nullable = false)
     private Integer level;
@@ -34,4 +39,17 @@ public class Member {
 
     @Column(nullable = false)
     private String neighborhood;
+
+    @Builder
+    private Member(User user, Sport sport, String nickname, String memberImage, Integer level, String city, String district, String neighborhood) {
+        this.user = user;
+        this.sport = sport;
+        this.nickname = nickname;
+        this.memberImage = memberImage;
+        this.level = level;
+        this.city = city;
+        this.district = district;
+        this.neighborhood = neighborhood;
+    }
+
 }
