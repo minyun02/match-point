@@ -31,7 +31,7 @@ public class TeamService {
     }
 
     public Long create(TeamCreateRequest request) {
-        Sport sport = sportService.getSportsById(request.getSportsId());
+        Sport sport = sportService.getSportById(request.getSportsId());
 
         return teamRepository.save(TeamCreateRequest.toEntity(request, sport)).getTeamId();
     }
@@ -44,7 +44,7 @@ public class TeamService {
             throw new MatchPointException(ErrorCode.MODIFICATION_NOT_ALLOWED);
         }
 
-        Sport sport = sportService.getSportsById(request.getSportsId());
+        Sport sport = sportService.getSportById(request.getSportsId());
 
         team.modifyTeam(request, sport, user.getName());
 
