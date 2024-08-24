@@ -59,4 +59,16 @@ public class Member {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
+    public static boolean isValidLocation(Double latitude, Double longitude) {
+        return isValidLatitude(latitude) && isValidLongitude(longitude);
+    }
+
+    private static boolean isValidLatitude(Double latitude) {
+        return latitude != null && latitude >= -90 && latitude <=90;
+    }
+
+    private static boolean isValidLongitude(Double longitude) {
+        return longitude != null && longitude >= -180 && longitude <=180;
+    }
 }
