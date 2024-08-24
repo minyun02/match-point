@@ -83,7 +83,7 @@ class TeamServiceTest extends Specification {
 
         then:
         def exception = thrown(MatchPointException)
-        exception.errorCode == ErrorCode.SPORTS_NOT_FOUND
+        exception.errorCode == ErrorCode.SPORT_NOT_FOUND
 
     }
 
@@ -166,7 +166,7 @@ class TeamServiceTest extends Specification {
 
         then:
         def exception = thrown(MatchPointException)
-        exception.errorCode == ErrorCode.SPORTS_NOT_FOUND
+        exception.errorCode == ErrorCode.SPORT_NOT_FOUND
     }
 
 }

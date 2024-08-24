@@ -17,7 +17,7 @@ public class SportService {
     private final SportRepository sportRepository;
 
     public Sport getSportById(Long sportsId) {
-        return sportRepository.findById(sportsId).orElseThrow(() -> new MatchPointException(ErrorCode.SPORTS_NOT_FOUND));
+        return sportRepository.findById(sportsId).orElseThrow(() -> new MatchPointException(ErrorCode.SPORT_NOT_FOUND));
     }
 
     public List<SportResponse> getList() {
