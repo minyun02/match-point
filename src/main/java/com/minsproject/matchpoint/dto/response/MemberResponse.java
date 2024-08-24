@@ -18,7 +18,7 @@ public class MemberResponse {
 
     private String city;
 
-    private String district;;
+    private String district;
 
     private String neighborhood;
 
