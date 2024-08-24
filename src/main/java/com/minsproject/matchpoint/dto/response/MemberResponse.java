@@ -2,7 +2,9 @@ package com.minsproject.matchpoint.dto.response;
 
 import com.minsproject.matchpoint.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class MemberResponse {
 
