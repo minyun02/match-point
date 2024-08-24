@@ -45,6 +45,14 @@ public class MemberCreateRequest {
     @NotBlank(message = "주소는 필수입니다.")
     private String neighborhood;
 
+    @Schema(description = "사용자 매칭 기준 좌표(위도)", example = "37.5140")
+    @NotNull(message = "매칭을 위해서 위치 좌표는 필수입니다.")
+    private Double latitude;
+
+    @Schema(description = "사용자 매칭 기준 좌표(경도)", example = "127.0565")
+    @NotNull(message = "매칭을 위해서 위치 좌표는 필수입니다.")
+    private Double longitude;
+
     public Member toEntity(User user, Sport sport) {
         return Member.builder()
                 .user(user)
@@ -55,6 +63,8 @@ public class MemberCreateRequest {
                 .city(city)
                 .district(district)
                 .neighborhood(neighborhood)
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
     }
 }

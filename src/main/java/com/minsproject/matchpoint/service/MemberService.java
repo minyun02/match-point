@@ -18,13 +18,11 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public MemberResponse create(MemberCreateRequest request) {
-
         User user = userService.getUserById(request.getUserId());
         Sport sport = sportService.getSportById(request.getSportId());
 
         Member newMember = memberRepository.save(request.toEntity(user, sport));
 
         return MemberResponse.fromEntity(newMember);
-
     }
 }

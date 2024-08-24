@@ -1,7 +1,9 @@
 package com.minsproject.matchpoint.dto.response;
 
 import com.minsproject.matchpoint.entity.Member;
+import lombok.Getter;
 
+@Getter
 public class MemberResponse {
 
     private String sportName;
@@ -18,7 +20,11 @@ public class MemberResponse {
 
     private String neighborhood;
 
-    private MemberResponse(String sportName, String nickname, String memberImage, Integer level, String city, String district, String neighborhood) {
+    private Double latitude;
+
+    private Double longitude;
+
+    private MemberResponse(String sportName, String nickname, String memberImage, Integer level, String city, String district, String neighborhood, Double latitude, Double longitude) {
         this.sportName = sportName;
         this.nickname = nickname;
         this.memberImage = memberImage;
@@ -26,6 +32,8 @@ public class MemberResponse {
         this.city = city;
         this.district = district;
         this.neighborhood = neighborhood;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public static MemberResponse fromEntity(Member entity) {
@@ -36,7 +44,9 @@ public class MemberResponse {
                 entity.getLevel(),
                 entity.getCity(),
                 entity.getDistrict(),
-                entity.getNeighborhood()
+                entity.getNeighborhood(),
+                entity.getLatitude(),
+                entity.getLongitude()
         );
     }
 }

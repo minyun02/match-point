@@ -40,8 +40,14 @@ public class Member {
     @Column(nullable = false)
     private String neighborhood;
 
+    @Column(nullable = false)
+    private Double latitude;
+
+    @Column(nullable = false)
+    private Double longitude;
+
     @Builder
-    private Member(User user, Sport sport, String nickname, String memberImage, Integer level, String city, String district, String neighborhood) {
+    private Member(User user, Sport sport, String nickname, String memberImage, Integer level, String city, String district, String neighborhood, Double latitude, Double longitude) {
         this.user = user;
         this.sport = sport;
         this.nickname = nickname;
@@ -50,6 +56,7 @@ public class Member {
         this.city = city;
         this.district = district;
         this.neighborhood = neighborhood;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
-
 }
