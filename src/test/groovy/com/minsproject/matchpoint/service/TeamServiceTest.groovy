@@ -7,13 +7,13 @@ import com.minsproject.matchpoint.dto.UserDTO
 import com.minsproject.matchpoint.dto.request.TeamCreateRequest
 import com.minsproject.matchpoint.dto.request.TeamModifyRequest
 import com.minsproject.matchpoint.dto.response.TeamResponse
-import com.minsproject.matchpoint.entity.Sports
+import com.minsproject.matchpoint.entity.Sport
 import com.minsproject.matchpoint.entity.Team
 import com.minsproject.matchpoint.entity.TeamMember
 import com.minsproject.matchpoint.entity.User
 import com.minsproject.matchpoint.exception.ErrorCode
-import com.minsproject.matchpoint.exception.LeagueCustomException
-import com.minsproject.matchpoint.repository.SportsRepository
+import com.minsproject.matchpoint.exception.MatchPointException
+import com.minsproject.matchpoint.repository.SportRepository
 import com.minsproject.matchpoint.repository.TeamMemberRepository
 import com.minsproject.matchpoint.repository.TeamRepository
 import spock.lang.Specification
@@ -24,7 +24,7 @@ class TeamServiceTest extends Specification {
 
     def teamRepository = Mock(TeamRepository)
 
-    def sportsRepository = Mock(SportsRepository)
+    def sportsRepository = Mock(SportRepository)
 
     def teamMemberRepository = Mock(TeamMemberRepository)
 
@@ -52,7 +52,7 @@ class TeamServiceTest extends Specification {
     def "getTeamList는 TeamSearchDTO를 기반으로 팀 목록을 반환한다"() {
 
         given:
-        def sports = Sports.builder().sportsId(1).name("축구").build()
+        def sports = Sport.builder().sportsId(1).name("축구").build()
         def searchDTO = new TeamSearchDTO(2, 100)
         def teamEntities = [
                 Team.builder()
@@ -82,8 +82,8 @@ class TeamServiceTest extends Specification {
         teamService.create(teamCreateReq)
 
         then:
-        def exception = thrown(LeagueCustomException)
-        exception.errorCode == ErrorCode.SPORTS_NOT_FOUND
+        def exception = thrown(MatchPointException)
+        exception.errorCode == ErrorCode.SPORT_NOT_FOUND
 
     }
 
@@ -100,7 +100,7 @@ class TeamServiceTest extends Specification {
                 .detailAddress("123-1")
                 .fullAddress("서울시 마포구 합정동 123-1")
                 .build()
-        def sports = Sports.builder().sportsId(1L).name("축구").build()
+        def sports = Sport.builder().sportsId(1L).name("축구").build()
         def team = Team.builder().teamId(1L).build()
 
         sportsRepository.findById(teamCreateReq.sportsId) >> Optional.of(sports)
@@ -124,7 +124,7 @@ class TeamServiceTest extends Specification {
         teamService.modify(teamId, teamModifyRequest, userDTO)
 
         then:
-        def exception = thrown(LeagueCustomException)
+        def exception = thrown(MatchPointException)
         exception.errorCode == ErrorCode.TEAM_NOT_FOUND
     }
 
@@ -133,8 +133,8 @@ class TeamServiceTest extends Specification {
         def teamId = 1L
         def teamModifyRequest = new TeamModifyRequest(sportsId: 1L)
         def userDTO = new UserDTO(userId: 1L)
-        def sports = new Sports(sportsId: 1L, name: "축구", status: 1L)
-        def team = new Team(teamId: 1L, sports: sports, teamName: "으라차FC")
+        def sports = new Sport(id: 1L, name: "축구", status: 1L)
+        def team = new Team(teamId: 1L, sport: sports, teamName: "으라차FC")
         def user = new User(userId: 1L)
         def teamMember = new TeamMember(teamMemberId: 1L, role: TeamMemberRole.NORMAL)
         teamRepository.findById(teamId) >> Optional.of(team)
@@ -144,7 +144,7 @@ class TeamServiceTest extends Specification {
         teamService.modify(teamId, teamModifyRequest, userDTO)
 
         then:
-        def exception = thrown(LeagueCustomException)
+        def exception = thrown(MatchPointException)
         exception.errorCode == ErrorCode.MODIFICATION_NOT_ALLOWED
     }
 
@@ -153,8 +153,8 @@ class TeamServiceTest extends Specification {
         def teamId = 1L
         def teamModifyRequest = new TeamModifyRequest(sportsId: 1L)
         def userDTO = new UserDTO(userId: 1L)
-        def sports = new Sports(sportsId: 1L, name: "축구", status: 1L)
-        def team = new Team(teamId: 1L, sports: sports, teamName: "으라차FC")
+        def sports = new Sport(id: 1L, name: "축구", status: 1L)
+        def team = new Team(teamId: 1L, sport: sports, teamName: "으라차FC")
         def user = new User(userId: 1L)
         def teamMember = new TeamMember(teamMemberId: 1L, role: TeamMemberRole.NORMAL)
         teamRepository.findById(teamId) >> Optional.of(team)
@@ -165,8 +165,8 @@ class TeamServiceTest extends Specification {
         teamService.modify(teamId, teamModifyRequest, userDTO)
 
         then:
-        def exception = thrown(LeagueCustomException)
-        exception.errorCode == ErrorCode.SPORTS_NOT_FOUND
+        def exception = thrown(MatchPointException)
+        exception.errorCode == ErrorCode.SPORT_NOT_FOUND
     }
 
 }

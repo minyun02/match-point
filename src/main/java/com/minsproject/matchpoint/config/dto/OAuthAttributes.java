@@ -67,7 +67,6 @@ public class OAuthAttributes {
     }
 
     public static OAuthAttributes ofNaver(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
-        System.out.println("attributes = " + attributes);
 
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 

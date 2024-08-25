@@ -22,7 +22,7 @@ public class Team extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sports_id")
-    private Sports sports;
+    private Sport sport;
 
     @Column(unique = true)
     private String teamName;
@@ -58,9 +58,9 @@ public class Team extends BaseEntity {
     private boolean isDeleted;
 
     @Builder
-    private Team(Long teamId, Sports sports, String teamName, String description, String fullAddress, String city, String town, String dong, String detailAddress, TeamStatus status, String creator) {
+    private Team(Long teamId, Sport sport, String teamName, String description, String fullAddress, String city, String town, String dong, String detailAddress, TeamStatus status, String creator) {
         this.teamId = teamId;
-        this.sports = sports;
+        this.sport = sport;
         this.teamName = teamName;
         this.description = description;
         this.fullAddress = fullAddress;
@@ -72,10 +72,10 @@ public class Team extends BaseEntity {
         this.creator = creator;
     }
 
-    public void modifyTeam(TeamModifyRequest dto, Sports sports, String username) {
+    public void modifyTeam(TeamModifyRequest dto, Sport sport, String username) {
         this.teamName = dto.getTeamName();
         this.description = dto.getDescription();
-        this.sports = sports;
+        this.sport = sport;
         this.dong = dto.getDong();
         this.detailAddress = dto.getDetailAddress();
         this.status = dto.getStatus();

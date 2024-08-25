@@ -6,13 +6,13 @@ import com.minsproject.matchpoint.dto.UserDTO;
 import com.minsproject.matchpoint.dto.request.TeamCreateRequest;
 import com.minsproject.matchpoint.dto.request.TeamModifyRequest;
 import com.minsproject.matchpoint.dto.response.TeamResponse;
+import com.minsproject.matchpoint.entity.Sport;
 import com.minsproject.matchpoint.entity.Team;
 import com.minsproject.matchpoint.entity.TeamMember;
 import com.minsproject.matchpoint.repository.TeamMemberRepository;
 import com.minsproject.matchpoint.repository.TeamRepository;
-import com.minsproject.matchpoint.entity.Sports;
 import com.minsproject.matchpoint.exception.ErrorCode;
-import com.minsproject.matchpoint.exception.LeagueCustomException;
+import com.minsproject.matchpoint.exception.MatchPointException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class TeamService {
 
     private final TeamRepository teamRepository;
-    private final SportsService sportsService;
+    private final SportService sportService;
     private final TeamMemberRepository teamMemberRepository;
 
     public List<TeamResponse> getTeamList(TeamSearchDTO searchDTO) {
@@ -31,22 +31,22 @@ public class TeamService {
     }
 
     public Long create(TeamCreateRequest request) {
-        Sports sports = sportsService.getSportsById(request.getSportsId());
+        Sport sport = sportService.getSportById(request.getSportsId());
 
-        return teamRepository.save(TeamCreateRequest.toEntity(request, sports)).getTeamId();
+        return teamRepository.save(TeamCreateRequest.toEntity(request, sport)).getTeamId();
     }
 
     public TeamResponse modify(Long teamId, TeamModifyRequest request, UserDTO user) {
         Team team = getTeamOrThrow(teamId);
 
-        TeamMember member = teamMemberRepository.findByTeamIdAndUserId(teamId, user.getUserId()).orElseThrow(() -> new LeagueCustomException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
+        TeamMember member = teamMemberRepository.findByTeamIdAndUserId(teamId, user.getUserId()).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
         if (member.getRole() != TeamMemberRole.OWNER) {
-            throw new LeagueCustomException(ErrorCode.MODIFICATION_NOT_ALLOWED);
+            throw new MatchPointException(ErrorCode.MODIFICATION_NOT_ALLOWED);
         }
 
-        Sports sports = sportsService.getSportsById(request.getSportsId());
+        Sport sport = sportService.getSportById(request.getSportsId());
 
-        team.modifyTeam(request, sports, user.getName());
+        team.modifyTeam(request, sport, user.getName());
 
         return TeamResponse.fromEntity(teamRepository.save(team));
     }
@@ -54,9 +54,9 @@ public class TeamService {
     public void delete(Long teamId, UserDTO user) {
         Team team = getTeamOrThrow(teamId);
 
-        TeamMember member = teamMemberRepository.findByTeamIdAndUserId(teamId, user.getUserId()).orElseThrow(() -> new LeagueCustomException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
+        TeamMember member = teamMemberRepository.findByTeamIdAndUserId(teamId, user.getUserId()).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
         if (member.getRole() != TeamMemberRole.OWNER) {
-            throw new LeagueCustomException(ErrorCode.DELETING_NOT_ALLOWED);
+            throw new MatchPointException(ErrorCode.DELETING_NOT_ALLOWED);
         }
 
         team.delete();
@@ -65,6 +65,6 @@ public class TeamService {
     }
 
     private Team getTeamOrThrow(Long teamId) {
-        return teamRepository.findById(teamId).orElseThrow(() -> new LeagueCustomException(ErrorCode.TEAM_NOT_FOUND));
+        return teamRepository.findById(teamId).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_NOT_FOUND));
     }
 }

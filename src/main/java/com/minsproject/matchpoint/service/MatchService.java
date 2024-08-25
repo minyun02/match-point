@@ -7,7 +7,7 @@ import com.minsproject.matchpoint.dto.response.TeamResponse;
 import com.minsproject.matchpoint.entity.Team;
 import com.minsproject.matchpoint.entity.TeamMember;
 import com.minsproject.matchpoint.exception.ErrorCode;
-import com.minsproject.matchpoint.exception.LeagueCustomException;
+import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.MatchRepository;
 import com.minsproject.matchpoint.repository.TeamMemberRepository;
 import com.minsproject.matchpoint.repository.TeamRepository;
@@ -39,12 +39,12 @@ public class MatchService {
 
         matchValidator.validatePlace(matchDTO.getPlace());
 
-        TeamMember teamMember = teamMemberRepository.findByTeamIdAndUserId(matchDTO.getInviterTeamId(), userDTO.getUserId()).orElseThrow(() -> new LeagueCustomException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
+        TeamMember teamMember = teamMemberRepository.findByTeamIdAndUserId(matchDTO.getInviterTeamId(), userDTO.getUserId()).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
 
         matchValidator.validateTeamMemberRole(teamMember);
 
         Team inviter = teamMember.getTeam();
-        Team invitee = teamRepository.findById(matchDTO.getInviteeTeamId()).orElseThrow(() -> new LeagueCustomException(ErrorCode.TEAM_NOT_FOUND));
+        Team invitee = teamRepository.findById(matchDTO.getInviteeTeamId()).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_NOT_FOUND));
 
         matchValidator.validateTeamAddress(inviter.getFullAddress(), invitee.getFullAddress());
 

@@ -35,7 +35,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                         team.city.eq(searchDTO.getCity())
                         .and(team.town.eq(searchDTO.getTown()))
                         .and(team.dong.eq(searchDTO.getDong()))
-                        .and(team.sports.sportsId.eq(searchDTO.getSportsId()))
+                        .and(team.sport.id.eq(searchDTO.getSportsId()))
                 )
                 .fetch()
                 ;

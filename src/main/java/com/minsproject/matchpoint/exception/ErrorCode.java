@@ -11,7 +11,7 @@ public enum ErrorCode {
     // NOT_FOUND
     TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "팀을 찾을 수 없어요."),
 
-    SPORTS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 종목을 찾을 수 없어요."),
+    SPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 종목을 찾을 수 없어요."),
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원을 찾을 수 없어요."),
 
@@ -41,7 +41,15 @@ public enum ErrorCode {
 
     INVALID_MATCH_PLACE(HttpStatus.BAD_REQUEST, "매칭 장소가 없습니다."),
 
-    TOKEN_NOU_FOUND(HttpStatus.NOT_FOUND, "토큰이 없습니다.");
+    TOKEN_NOU_FOUND(HttpStatus.NOT_FOUND, "토큰이 없습니다."),
+
+    WRONG_PROVIDER(HttpStatus.BAD_REQUEST, "소셜로그인에 문제가 발생했습니다."),
+
+    MEMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 종목에 이미 운동 프로필을 생성했습니다."),
+
+    MEMBER_DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다."),
+
+    INVALID_LEVEL(HttpStatus.BAD_REQUEST, "올바르지 않은 레벨입니다.");
 
     private HttpStatus status;
     private String message;

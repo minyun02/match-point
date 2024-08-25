@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionController {
 
-    @ExceptionHandler(LeagueCustomException.class)
-    public ResponseEntity<Response<Void>> applicationHandler(LeagueCustomException e) {
+    @ExceptionHandler(MatchPointException.class)
+    public ResponseEntity<Response<Void>> applicationHandler(MatchPointException e) {
         log.error("Exception occurs {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getStatus())
-                .body(Response.error(e.getErrorCode().name()));
+                .body(Response.error(e.getMessage()));
     }
 }

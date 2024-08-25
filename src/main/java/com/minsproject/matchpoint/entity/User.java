@@ -17,6 +17,7 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false)
@@ -36,7 +37,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    private Timestamp lastLoginDate;
+    private Timestamp lastLoginAt;
 
     @Builder
     public User(String name, String email, String provider, UserRole role, UserStatus status) {
@@ -48,7 +49,7 @@ public class User extends BaseEntity {
     }
 
     public User updateLastLoginDate() {
-        this.lastLoginDate = Timestamp.valueOf(LocalDateTime.now());
+        this.lastLoginAt = Timestamp.valueOf(LocalDateTime.now());
 
         return this;
     }

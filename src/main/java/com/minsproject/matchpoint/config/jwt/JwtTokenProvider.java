@@ -2,6 +2,8 @@ package com.minsproject.matchpoint.config.jwt;
 
 import com.minsproject.matchpoint.dto.UserDTO;
 import com.minsproject.matchpoint.entity.UserToken;
+import com.minsproject.matchpoint.exception.ErrorCode;
+import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.service.TokenService;
 import com.minsproject.matchpoint.service.UserService;
 import io.jsonwebtoken.*;
@@ -87,10 +89,12 @@ public class JwtTokenProvider {
 
     public String generateToken(Authentication authentication, long expiredTime) {
         DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
+        String provider = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
 
         Claims claims = Jwts.claims();
-        claims.put(CLAIMS_EMAIL, oAuth2User.getAttributes().get(CLAIMS_EMAIL));
-        claims.put(CLAIMS_PROVIDER, ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId());
+        Object email = getEmail(provider, oAuth2User.getAttributes());
+        claims.put(CLAIMS_EMAIL, email);
+        claims.put(CLAIMS_PROVIDER, provider);
 
         return BEARER_PREFIX + Jwts.builder()
                 .setClaims(claims)
@@ -98,11 +102,6 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + expiredTime))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    private Key getKey() {
-        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateNewAccessToken(String token) {
@@ -121,7 +120,31 @@ public class JwtTokenProvider {
         return "";
     }
 
-    public Authentication getAuthentication(String token, UserDTO user) {
+    private Key getKey() {
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private Authentication getAuthentication(String token, UserDTO user) {
         return new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
+    }
+
+    private Object getEmail(String provider, Map<String, Object> attributes) {
+        switch (provider) {
+            case "google" -> {
+                return attributes.get("email");
+            }
+            case "kakao" -> {
+                Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+                Map<String, Object> profile = (Map<String, Object>) account.get("profile");
+
+                return (String) profile.get("nickname") + attributes.get("id");
+            }
+            case "naver" -> {
+                Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+                return response.get("email");
+            }
+            default -> throw new MatchPointException(ErrorCode.WRONG_PROVIDER, "소셜로그인에 문제가 발생했습니다.");
+        }
     }
 }

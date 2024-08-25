@@ -5,13 +5,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LeagueCustomException extends RuntimeException {
+public class MatchPointException extends RuntimeException {
 
     private ErrorCode errorCode;
 
     private String message;
 
-    public LeagueCustomException(ErrorCode errorCode) {
+    public MatchPointException(ErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = null;
     }

@@ -31,8 +31,8 @@ public class TeamResponse {
 
     public static TeamResponse fromEntity(Team entity) {
         return new TeamResponse(
-                entity.getSports().getSportsId(),
-                entity.getSports().getName(),
+                entity.getSport().getId(),
+                entity.getSport().getName(),
                 entity.getTeamName(),
                 entity.getDescription(),
                 entity.getFullAddress(),
