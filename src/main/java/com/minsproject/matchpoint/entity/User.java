@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -38,6 +39,10 @@ public class User extends BaseEntity {
     private UserStatus status;
 
     private Timestamp lastLoginAt;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private List<Member> members;
 
     @Builder
     public User(String name, String email, String provider, UserRole role, UserStatus status) {
