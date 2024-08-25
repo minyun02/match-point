@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class MemberResponse {
 
+    private Long sportId;
+
     private String sportName;
 
     private String nickname;
@@ -26,7 +28,8 @@ public class MemberResponse {
 
     private Double longitude;
 
-    private MemberResponse(String sportName, String nickname, String memberImage, Integer level, String city, String district, String neighborhood, Double latitude, Double longitude) {
+    private MemberResponse(Long sportId, String sportName, String nickname, String memberImage, Integer level, String city, String district, String neighborhood, Double latitude, Double longitude) {
+        this.sportId = sportId;
         this.sportName = sportName;
         this.nickname = nickname;
         this.memberImage = memberImage;
@@ -40,6 +43,7 @@ public class MemberResponse {
 
     public static MemberResponse fromEntity(Member entity) {
         return new MemberResponse(
+                entity.getSport().getId(),
                 entity.getSport().getName(),
                 entity.getNickname(),
                 entity.getMemberImage(),

@@ -41,8 +41,8 @@ public class MemberService {
                 .orElseGet(MemberResponse::new);
     }
 
-    public MemberResponse getMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
+    public MemberResponse getMemberByIdAndSportId(Long memberId, Long sportId) {
+        return memberRepository.findByIdAndSportId(memberId, sportId)
                 .map(MemberResponse::fromEntity)
                 .orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
     }

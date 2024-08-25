@@ -34,10 +34,10 @@ public class MemberController {
     }
 
     @GetMapping("/by-id/{memberId}")
-    @Operation(summary = "운동 종목 프로필 아이디로 조회")
+    @Operation(summary = "운동 종목 프로필 아이디와 종목 아이디로 조회")
     @ApiResponse(responseCode = "200", description = "조회한 결과를 반환한다")
-    public MemberResponse getMemberById(@PathVariable Long memberId) {
-        return memberService.getMemberById(memberId);
+    public MemberResponse getMemberByIdAndSportId(@PathVariable Long memberId, @RequestParam Long sportId) {
+        return memberService.getMemberByIdAndSportId(memberId, sportId);
     }
 
 }
