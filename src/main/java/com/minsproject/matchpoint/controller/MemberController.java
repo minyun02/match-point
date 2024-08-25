@@ -26,10 +26,18 @@ public class MemberController {
         return memberService.create(request);
     }
 
-    @GetMapping("/{nickname}")
-    @Operation(summary = "운동 종목 계정 닉네임으로 조회")
+    @GetMapping("/by-nickname/{nickname}")
+    @Operation(summary = "운동 종목 프로필 닉네임으로 조회")
     @ApiResponse(responseCode = "200", description = "해당 닉네임으로 조회한 결과가 있으면 프로필 정보를 반환하고 없으면 비어있는 프로필을 반환한다")
     public MemberResponse getMemberByNickname(@PathVariable String nickname) {
         return memberService.getMemberByNickname(nickname);
     }
+
+    @GetMapping("/by-id/{memberId}")
+    @Operation(summary = "운동 종목 프로필 아이디로 조회")
+    @ApiResponse(responseCode = "200", description = "조회한 결과를 반환한다")
+    public MemberResponse getMemberById(@PathVariable Long memberId) {
+        return memberService.getMemberById(memberId);
+    }
+
 }
