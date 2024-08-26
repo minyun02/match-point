@@ -41,6 +41,12 @@ public class MemberService {
                 .orElseGet(MemberResponse::new);
     }
 
+    public MemberResponse getMemberByIdAndSportId(Long memberId, Long sportId) {
+        return memberRepository.findByIdAndSportId(memberId, sportId)
+                .map(MemberResponse::fromEntity)
+                .orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
+    }
+
     private void validateLocation(Double latitude, Double longitude) {
         if (!Member.isValidLocation(latitude, longitude)) {
             throw new MatchPointException(ErrorCode.INVALID_MATCH_PLACE, "올바른 위치 정보가 아닙니다.");

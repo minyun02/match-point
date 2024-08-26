@@ -1,7 +1,9 @@
 package com.minsproject.matchpoint.dto.response;
 
 import com.minsproject.matchpoint.entity.Sport;
+import lombok.Getter;
 
+@Getter
 public class SportResponse {
 
     private Long id;
