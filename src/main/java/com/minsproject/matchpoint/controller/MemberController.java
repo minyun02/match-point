@@ -1,7 +1,9 @@
 package com.minsproject.matchpoint.controller;
 
+import com.minsproject.matchpoint.dto.request.MemberSearchRequest;
 import com.minsproject.matchpoint.dto.request.MemberCreateRequest;
 import com.minsproject.matchpoint.dto.response.MemberResponse;
+import com.minsproject.matchpoint.dto.response.MemberWithDistanceResponse;
 import com.minsproject.matchpoint.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,6 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Tag(name = "종목별 멤버", description = "사용자의 종목별 멤버 API")
@@ -40,4 +44,10 @@ public class MemberController {
         return memberService.getMemberByIdAndSportId(memberId, sportId);
     }
 
+    @GetMapping
+    @Operation(summary = "매칭 조건에 맞는 프로필 목록 조회")
+    @ApiResponse(responseCode = "200")
+    public List<MemberWithDistanceResponse> getAvailableProfiles(@RequestBody MemberSearchRequest request) {
+        return memberService.getAvailableMembers(request);
+    }
 }

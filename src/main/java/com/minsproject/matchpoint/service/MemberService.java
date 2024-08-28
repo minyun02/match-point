@@ -1,7 +1,10 @@
 package com.minsproject.matchpoint.service;
 
 import com.minsproject.matchpoint.dto.request.MemberCreateRequest;
+import com.minsproject.matchpoint.dto.request.MemberSearchRequest;
 import com.minsproject.matchpoint.dto.response.MemberResponse;
+import com.minsproject.matchpoint.dto.response.MemberWithDistance;
+import com.minsproject.matchpoint.dto.response.MemberWithDistanceResponse;
 import com.minsproject.matchpoint.entity.Member;
 import com.minsproject.matchpoint.entity.Sport;
 import com.minsproject.matchpoint.entity.User;
@@ -11,6 +14,8 @@ import com.minsproject.matchpoint.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -45,6 +50,14 @@ public class MemberService {
         return memberRepository.findByIdAndSportId(memberId, sportId)
                 .map(MemberResponse::fromEntity)
                 .orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
+    }
+
+    public List<MemberWithDistanceResponse> getAvailableMembers(MemberSearchRequest request) {
+        sportService.getSportById(request.getSportId());
+
+        List<MemberWithDistance> membersWithDistance = memberRepository.findAvailableMembers(request);
+
+        return membersWithDistance.stream().map(MemberWithDistanceResponse::fromEntity).toList();
     }
 
     private void validateLocation(Double latitude, Double longitude) {
