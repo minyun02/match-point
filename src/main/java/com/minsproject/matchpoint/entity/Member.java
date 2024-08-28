@@ -53,8 +53,10 @@ public class Member {
     @Column(columnDefinition = "GEOMETRY")
     private Point location;
 
+    private boolean canMatch;
+
     @Builder
-    private Member(User user, Sport sport, String nickname, String memberImage, Integer level, String city, String district, String neighborhood, Double latitude, Double longitude) {
+    private Member(User user, Sport sport, String nickname, String memberImage, Integer level, String city, String district, String neighborhood, Double latitude, Double longitude, boolean canMatch) {
         this.user = user;
         this.sport = sport;
         this.nickname = nickname;
@@ -65,6 +67,7 @@ public class Member {
         this.neighborhood = neighborhood;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.canMatch = canMatch;
     }
 
     public static boolean isValidLocation(Double latitude, Double longitude) {
@@ -86,5 +89,9 @@ public class Member {
             GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
             this.location = factory.createPoint(new Coordinate(this.longitude, this.latitude));
         }
+    }
+
+    public boolean canMatch() {
+        return this.canMatch;
     }
 }

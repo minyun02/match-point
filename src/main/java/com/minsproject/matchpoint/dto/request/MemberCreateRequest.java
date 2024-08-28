@@ -65,6 +65,7 @@ public class MemberCreateRequest {
                 .neighborhood(neighborhood)
                 .latitude(latitude)
                 .longitude(longitude)
+                .canMatch(true)
                 .build();
     }
 }
