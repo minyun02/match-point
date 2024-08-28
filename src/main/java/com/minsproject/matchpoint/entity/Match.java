@@ -7,21 +7,26 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @NoArgsConstructor
 @Entity(name = "matches")
 public class Match extends BaseEntity {
 
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long matchId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inviter_team_id")
-    private Team inviterTeamId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invitee_team_id")
-    private Team inviteeTeamId;
+    @JoinColumn(name = "inviter_id")
+    private Member inviter;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invitee_id")
+    private Member invitee;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sport_id")
+    private Sport sport;
 
     @ManyToOne
     @JoinColumn(name = "place_id")
@@ -29,14 +34,25 @@ public class Match extends BaseEntity {
 
     private LocalDateTime matchDay;
 
+    private String message;
+
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private MatchStatus status;
 
-    public Match(Team inviterTeamId, Team inviteeTeamId, Place place, LocalDateTime matchDay, MatchStatus status) {
-        this.inviterTeamId = inviterTeamId;
-        this.inviteeTeamId = inviteeTeamId;
+    public Match(Member inviter,
+                 Member invitee,
+                 Sport sport,
+                 Place place,
+                 LocalDateTime matchDay,
+                 String message,
+                 MatchStatus status) {
+        this.inviter = inviter;
+        this.invitee = invitee;
+        this.sport = sport;
         this.place = place;
         this.matchDay = matchDay;
+        this.message = message;
         this.status = status;
     }
 }

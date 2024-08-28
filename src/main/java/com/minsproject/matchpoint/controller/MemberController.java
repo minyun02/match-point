@@ -47,7 +47,7 @@ public class MemberController {
     @GetMapping
     @Operation(summary = "매칭 조건에 맞는 프로필 목록 조회")
     @ApiResponse(responseCode = "200")
-    public List<MemberWithDistanceResponse> getAvailableProfiles(@RequestBody MemberSearchRequest request) {
+    public List<MemberWithDistanceResponse> getAvailableProfiles(@Valid @RequestBody MemberSearchRequest request) {
         return memberService.getAvailableMembers(request);
     }
 }

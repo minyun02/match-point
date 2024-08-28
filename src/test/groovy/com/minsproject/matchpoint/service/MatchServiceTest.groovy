@@ -4,7 +4,7 @@ import com.minsproject.matchpoint.dto.TeamSearchDTO
 import com.minsproject.matchpoint.dto.response.TeamResponse
 import com.minsproject.matchpoint.entity.Sport
 import com.minsproject.matchpoint.entity.Team
-import com.minsproject.matchpoint.repository.TeamRepository
+
 import spock.lang.Specification
 import spock.lang.Subject
 

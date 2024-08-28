@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 public class MemberWithDistanceResponse {
 
+    private Long memberId;
+
     private String sportName;
 
     private String nickname;
@@ -22,7 +24,8 @@ public class MemberWithDistanceResponse {
 
     private Double distance;
 
-    private MemberWithDistanceResponse(String sportName, String nickname, String memberImage, Integer level, String city, String district, String neighborhood, Double distance) {
+    private MemberWithDistanceResponse(Long memberId, String sportName, String nickname, String memberImage, Integer level, String city, String district, String neighborhood, Double distance) {
+        this.memberId = memberId;
         this.sportName = sportName;
         this.nickname = nickname;
         this.memberImage = memberImage;
@@ -36,6 +39,7 @@ public class MemberWithDistanceResponse {
     public static MemberWithDistanceResponse fromEntity(MemberWithDistance entity) {
         Member member = entity.getMember();
         return new MemberWithDistanceResponse(
+                member.getId(),
                 member.getSport().getName(),
                 member.getNickname(),
                 member.getMemberImage(),

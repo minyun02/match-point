@@ -22,19 +22,4 @@ public class PlaceRequest {
 
     private Integer zipcode;
 
-    public static Place toEntity(PlaceRequest dto) {
-        if (dto.getPlaceId() == null) {
-            return new Place(
-                    dto.getCity(),
-                    dto.getDistrict(),
-                    dto.getNeighborhood(),
-                    dto.getDetailAddress(),
-                    dto.getZipcode()
-            );
-        }
-
-        return new Place(
-                dto.getPlaceId()
-        );
-    }
 }

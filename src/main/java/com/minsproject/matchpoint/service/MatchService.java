@@ -1,56 +1,64 @@
 package com.minsproject.matchpoint.service;
 
-import com.minsproject.matchpoint.dto.MatchDTO;
-import com.minsproject.matchpoint.dto.TeamSearchDTO;
-import com.minsproject.matchpoint.dto.UserDTO;
-import com.minsproject.matchpoint.dto.response.TeamResponse;
-import com.minsproject.matchpoint.entity.Team;
-import com.minsproject.matchpoint.entity.TeamMember;
+import com.minsproject.matchpoint.dto.MatchRequest;
+import com.minsproject.matchpoint.entity.Match;
+import com.minsproject.matchpoint.entity.Member;
+import com.minsproject.matchpoint.entity.Place;
+import com.minsproject.matchpoint.entity.Sport;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.MatchRepository;
-import com.minsproject.matchpoint.repository.TeamMemberRepository;
-import com.minsproject.matchpoint.repository.TeamRepository;
-import com.minsproject.matchpoint.validator.MatchValidator;
+import com.minsproject.matchpoint.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
 public class MatchService {
 
-    private final TeamRepository teamRepository;
+    private final SportService sportService;
 
-    private final TeamMemberRepository teamMemberRepository;
+    private final PlaceService placeService;
+
+    private final MemberRepository memberRepository;
 
     private final MatchRepository matchRepository;
 
-    private final MatchValidator matchValidator;
+    public Match createMatch(MatchRequest request) {
+        validateMatchDay(request);
 
-    public List<TeamResponse> getTeamList(TeamSearchDTO searchDTO) {
-        return teamRepository.findTeamsForMatch(searchDTO).stream().map(TeamResponse::fromEntity).toList();
+        Member inviter = getMember(request.getInviterId(), request.getSportId());
+        Member invitee = getMember(request.getInviteeId(), request.getSportId());
+        validateMatchStatus(inviter, invitee);
+
+        Sport sport = sportService.getSportById(request.getSportId());
+        Place place = placeService.getPlaceById(request.getPlaceId());
+
+        Match match = MatchRequest.toEntity(inviter, invitee, sport, place, request);
+
+        return matchRepository.save(match);
     }
 
-    public Long createMatch(MatchDTO matchDTO, UserDTO userDTO) {
+    private void validateMatchStatus(Member inviter, Member invitee) {
+        if (!inviter.canMatch()) {
+            throw new MatchPointException(ErrorCode.MATCH_INVITER_CANNOT_MATCH);
+        }
 
-        matchValidator.validateMatchDay(matchDTO.getMatchDay());
+        if (!invitee.canMatch()) {
+            throw new MatchPointException(ErrorCode.MATCH_INVITEE_CANNOT_MATCH);
+        }
+    }
 
-        matchValidator.validatePlace(matchDTO.getPlace());
+    private Member getMember(Long memberId, Long sportId) {
+        return memberRepository.findByIdAndSportId(memberId, sportId).orElseThrow(() -> new MatchPointException(ErrorCode.MEMBER_NOT_FOUND));
+    }
 
-        TeamMember teamMember = teamMemberRepository.findByTeamIdAndUserId(matchDTO.getInviterTeamId(), userDTO.getUserId()).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
-
-        matchValidator.validateTeamMemberRole(teamMember);
-
-        Team inviter = teamMember.getTeam();
-        Team invitee = teamRepository.findById(matchDTO.getInviteeTeamId()).orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_NOT_FOUND));
-
-        matchValidator.validateTeamAddress(inviter.getFullAddress(), invitee.getFullAddress());
-
-        matchValidator.validateTeamStatus(invitee.getStatus());
-
-        return matchRepository.save(MatchDTO.toEntity(inviter, invitee, matchDTO)).getMatchId();
+    private void validateMatchDay(MatchRequest request) {
+        if (request.getMatchDay().isAfter(LocalDateTime.now())) {
+            throw new MatchPointException(ErrorCode.INVALID_MATCH_DAY);
+        }
     }
 
 }

@@ -1,8 +1,10 @@
 package com.minsproject.matchpoint.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 @Entity
 public class Place extends BaseEntity {
@@ -12,28 +14,20 @@ public class Place extends BaseEntity {
     private Long placeId;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String city;
 
     @Column(nullable = false)
-    private String town;
+    private String district;
 
-    private String dong;
+    @Column(nullable = false)
+    private String neighborhood;
 
     @Column(nullable = false)
     private String detailAddress;
 
     @Column(nullable = false)
     private Integer zipcode;
-
-    public Place(Long placeId) {
-        this.placeId = placeId;
-    }
-
-    public Place(String city, String town, String dong, String detailAddress, Integer zipcode) {
-        this.city = city;
-        this.town = town;
-        this.dong = dong;
-        this.detailAddress = detailAddress;
-        this.zipcode = zipcode;
-    }
 }

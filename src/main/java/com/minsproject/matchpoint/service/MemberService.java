@@ -49,7 +49,7 @@ public class MemberService {
     public MemberResponse getMemberByIdAndSportId(Long memberId, Long sportId) {
         return memberRepository.findByIdAndSportId(memberId, sportId)
                 .map(MemberResponse::fromEntity)
-                .orElseThrow(() -> new MatchPointException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MatchPointException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     public List<MemberWithDistanceResponse> getAvailableMembers(MemberSearchRequest request) {
