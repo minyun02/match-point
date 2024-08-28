@@ -15,9 +15,13 @@ public enum ErrorCode {
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원을 찾을 수 없어요."),
 
-    TEAM_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "팀 멤버를 찾을 수 없어요."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "팀 멤버를 찾을 수 없어요."),
 
     DELETING_NOT_ALLOWED(HttpStatus.NOT_FOUND, "삭제할 수 없습니다."),
+
+    TOKEN_NOU_FOUND(HttpStatus.NOT_FOUND, "토큰이 없습니다."),
+
+    PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "매칭 장소를 찾을 수 없습니다."),
 
     // UNAUTHORIZED
     MODIFICATION_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "수정할 수 없습니다."),
@@ -27,7 +31,9 @@ public enum ErrorCode {
     // BAD_REQUEST
     DUPLICATED_USER_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입한 이메일입니다."),
 
-    TEAM_NOT_ACCEPTING_MEMBER(HttpStatus.BAD_REQUEST, "지금은 팀에 가입할 수 없습니다."),
+    MATCH_INVITER_CANNOT_MATCH(HttpStatus.BAD_REQUEST, "매칭 신청자가 매칭을 신청할 수 없는 상태입니다."),
+
+    MATCH_INVITEE_CANNOT_MATCH(HttpStatus.BAD_REQUEST, "매칭을 신청할 수 없는 상대입니다."),
 
     ALREADY_IN_TEAM(HttpStatus.BAD_REQUEST, "이미 가입한 팀입니다."),
 
@@ -41,15 +47,16 @@ public enum ErrorCode {
 
     INVALID_MATCH_PLACE(HttpStatus.BAD_REQUEST, "매칭 장소가 없습니다."),
 
-    TOKEN_NOU_FOUND(HttpStatus.NOT_FOUND, "토큰이 없습니다."),
-
     WRONG_PROVIDER(HttpStatus.BAD_REQUEST, "소셜로그인에 문제가 발생했습니다."),
 
     MEMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 종목에 이미 운동 프로필을 생성했습니다."),
 
     MEMBER_DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다."),
 
-    INVALID_LEVEL(HttpStatus.BAD_REQUEST, "올바르지 않은 레벨입니다.");
+    INVALID_LEVEL(HttpStatus.BAD_REQUEST, "올바르지 않은 레벨입니다."),
+
+
+    ;
 
     private HttpStatus status;
     private String message;
