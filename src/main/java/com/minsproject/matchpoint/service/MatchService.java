@@ -11,6 +11,7 @@ import com.minsproject.matchpoint.repository.MatchRepository;
 import com.minsproject.matchpoint.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -26,6 +27,7 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
 
+    @Transactional
     public Match createMatch(MatchRequest request) {
         validateMatchDay(request);
 
@@ -56,7 +58,7 @@ public class MatchService {
     }
 
     private void validateMatchDay(MatchRequest request) {
-        if (request.getMatchDay().isAfter(LocalDateTime.now())) {
+        if (request.getMatchDay().isBefore(LocalDateTime.now())) {
             throw new MatchPointException(ErrorCode.INVALID_MATCH_DAY);
         }
     }
