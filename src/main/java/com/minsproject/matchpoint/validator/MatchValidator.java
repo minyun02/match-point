@@ -2,7 +2,7 @@ package com.minsproject.matchpoint.validator;
 
 import com.minsproject.matchpoint.constant.TeamMemberRole;
 import com.minsproject.matchpoint.constant.status.TeamStatus;
-import com.minsproject.matchpoint.dto.PlaceDTO;
+import com.minsproject.matchpoint.dto.request.PlaceRequest;
 import com.minsproject.matchpoint.entity.TeamMember;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
@@ -20,11 +20,11 @@ public class MatchValidator {
         }
     }
 
-    public void validatePlace(PlaceDTO place) {
+    public void validatePlace(PlaceRequest place) {
         if (place.getPlaceId() == null && (Stream.of(
                     place.getCity()
-                    , place.getTown()
-                    , place.getDong()
+                    , place.getDistrict()
+                    , place.getNeighborhood()
                     , place.getDetailAddress()
             ).anyMatch(Objects::isNull))) {
                 throw new MatchPointException(ErrorCode.INVALID_MATCH_PLACE);

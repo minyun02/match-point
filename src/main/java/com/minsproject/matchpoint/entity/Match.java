@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Entity
+@Entity(name = "matches")
 public class Match extends BaseEntity {
 
     @Getter

@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 
 @Getter
 @NoArgsConstructor
@@ -46,6 +50,9 @@ public class Member {
     @Column(nullable = false)
     private Double longitude;
 
+    @Column(columnDefinition = "GEOMETRY")
+    private Point location;
+
     @Builder
     private Member(User user, Sport sport, String nickname, String memberImage, Integer level, String city, String district, String neighborhood, Double latitude, Double longitude) {
         this.user = user;
@@ -70,5 +77,14 @@ public class Member {
 
     private static boolean isValidLongitude(Double longitude) {
         return longitude != null && longitude >= -180 && longitude <=180;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void updateLocation() {
+        if (this.latitude != null && this.longitude != null) {
+            GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
+            this.location = factory.createPoint(new Coordinate(this.longitude, this.latitude));
+        }
     }
 }
