@@ -1,4 +1,4 @@
-package com.minsproject.matchpoint.dto;
+package com.minsproject.matchpoint.dto.request;
 
 import com.minsproject.matchpoint.entity.Place;
 import lombok.Getter;
@@ -6,26 +6,28 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PlaceDTO {
+public class PlaceRequest {
 
     private Long placeId;
 
+    private String name;
+
     private String city;
 
-    private String town;
+    private String district;
 
-    private String dong;
+    private String neighborhood;
 
     private String detailAddress;
 
     private Integer zipcode;
 
-    public static Place toEntity(PlaceDTO dto) {
+    public static Place toEntity(PlaceRequest dto) {
         if (dto.getPlaceId() == null) {
             return new Place(
                     dto.getCity(),
-                    dto.getTown(),
-                    dto.getDong(),
+                    dto.getDistrict(),
+                    dto.getNeighborhood(),
                     dto.getDetailAddress(),
                     dto.getZipcode()
             );
