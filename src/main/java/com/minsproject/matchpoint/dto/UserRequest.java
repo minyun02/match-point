@@ -17,7 +17,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class UserDTO implements UserDetails {
+public class UserRequest implements UserDetails {
 
     private Long userId;
 
@@ -42,7 +42,7 @@ public class UserDTO implements UserDetails {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private UserDTO(Long userId, String email, String password, String name, String mobileNumber, String socialLoginType, String socialLoginId, UserRole role, UserStatus status, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    private UserRequest(Long userId, String email, String password, String name, String mobileNumber, String socialLoginType, String socialLoginId, UserRole role, UserStatus status, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.userId = userId;
         this.email = email;
         this.name = name;
@@ -56,8 +56,8 @@ public class UserDTO implements UserDetails {
         this.modifiedAt = modifiedAt;
     }
 
-    public static UserDTO fromEntity(User entity) {
-        return UserDTO.builder()
+    public static UserRequest fromEntity(User entity) {
+        return UserRequest.builder()
                 .userId(entity.getId())
                 .email(entity.getEmail())
                 .role(entity.getRole())
