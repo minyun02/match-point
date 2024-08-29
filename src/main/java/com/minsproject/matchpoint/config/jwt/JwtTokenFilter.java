@@ -1,6 +1,6 @@
 package com.minsproject.matchpoint.config.jwt;
 
-import com.minsproject.matchpoint.dto.UserRequest;
+import com.minsproject.matchpoint.dto.request.UserRequest;
 import com.minsproject.matchpoint.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

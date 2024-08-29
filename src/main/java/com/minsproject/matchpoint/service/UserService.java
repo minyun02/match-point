@@ -1,7 +1,7 @@
 package com.minsproject.matchpoint.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.minsproject.matchpoint.dto.UserRequest;
+import com.minsproject.matchpoint.dto.request.UserRequest;
 import com.minsproject.matchpoint.dto.response.SportResponse;
 import com.minsproject.matchpoint.entity.Member;
 import com.minsproject.matchpoint.entity.User;

@@ -37,6 +37,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.hibernate/hibernate-spatial
 	implementation 'org.hibernate:hibernate-spatial:6.6.0.Final'
 
+	// https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	runtimeOnly 'com.h2database:h2'

@@ -1,7 +1,7 @@
 package com.minsproject.matchpoint.service;
 
 import com.minsproject.matchpoint.constant.status.MatchStatus;
-import com.minsproject.matchpoint.dto.MatchRequest;
+import com.minsproject.matchpoint.dto.request.MatchRequest;
 import com.minsproject.matchpoint.dto.request.MatchRespondRequest;
 import com.minsproject.matchpoint.dto.request.MatchSearchRequest;
 import com.minsproject.matchpoint.entity.Match;

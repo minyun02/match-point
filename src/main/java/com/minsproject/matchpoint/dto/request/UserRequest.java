@@ -1,4 +1,4 @@
-package com.minsproject.matchpoint.dto;
+package com.minsproject.matchpoint.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.minsproject.matchpoint.constant.UserRole;
