@@ -12,6 +12,8 @@ public enum MatchStatus {
 
     FINISHED,
 
+    CANCELED,
+
     REJECTED,
 
     NO_RESPONSE

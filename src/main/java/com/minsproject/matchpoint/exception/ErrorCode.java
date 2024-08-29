@@ -23,10 +23,14 @@ public enum ErrorCode {
 
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "매칭 장소를 찾을 수 없습니다."),
 
+    MATCH_NOT_FOUND(HttpStatus.NOT_FOUND, "매칭을 찾을 수 없습니다."),
+
     // UNAUTHORIZED
     MODIFICATION_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "수정할 수 없습니다."),
 
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "회원이나 비밀번호를 확인해주세요."),
+
+    MATCH_RESPOND_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "요청하신 매칭 응답에 권한이 없습니다."),
 
     // BAD_REQUEST
     DUPLICATED_USER_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입한 이메일입니다."),
@@ -55,6 +59,7 @@ public enum ErrorCode {
 
     INVALID_LEVEL(HttpStatus.BAD_REQUEST, "올바르지 않은 레벨입니다."),
 
+    MATCH_INVALID_STATUS(HttpStatus.BAD_REQUEST, "올바른 매칭 응답 요청이 아닙니다."),
 
     ;
 
