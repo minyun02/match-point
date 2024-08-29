@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionController {
 
     @ExceptionHandler(MatchPointException.class)
-    public ResponseEntity<Response<Void>> applicationHandler(MatchPointException e) {
+    public ResponseEntity<Response<String>> applicationHandler(MatchPointException e) {
         log.error("Exception occurs {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getStatus())
-                .body(Response.error(e.getMessage()));
+                .body(Response.error(e.getErrorCode().name(), e.getErrorCode().getMessage()));
     }
 }

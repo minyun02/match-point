@@ -11,7 +11,7 @@ public class Response<T> {
 
     private T result;
 
-    public static Response<Void> error(String errorCode) {
-        return new Response<>(errorCode, null);
+    public static Response<String> error(String errorCode, String message) {
+        return new Response<>(errorCode, message);
     }
 }

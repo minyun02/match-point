@@ -1,6 +1,6 @@
 package com.minsproject.matchpoint.config.jwt;
 
-import com.minsproject.matchpoint.dto.UserDTO;
+import com.minsproject.matchpoint.dto.UserRequest;
 import com.minsproject.matchpoint.entity.UserToken;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
@@ -110,7 +110,7 @@ public class JwtTokenProvider {
         if (validateToken(userToken.getRefreshToken())) {
             String email = getClaimsEmail(token);
             String provider = getClaimsProvider(token);
-            UserDTO user = userService.loadUserByEmailAndProvider(email, provider);
+            UserRequest user = userService.loadUserByEmailAndProvider(email, provider);
             String newAccessToken = generateAccessToken(getAuthentication(token, user));
             tokenService.updateAccessToken(newAccessToken, email, provider);
 
@@ -125,7 +125,7 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private Authentication getAuthentication(String token, UserDTO user) {
+    private Authentication getAuthentication(String token, UserRequest user) {
         return new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
     }
 

@@ -1,6 +1,6 @@
 package com.minsproject.matchpoint.config.jwt;
 
-import com.minsproject.matchpoint.dto.UserDTO;
+import com.minsproject.matchpoint.dto.UserRequest;
 import com.minsproject.matchpoint.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -47,7 +47,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             String email = jwtTokenProvider.getClaimsEmail(token);
             String provider = jwtTokenProvider.getClaimsProvider(token);
-            UserDTO user = userService.loadUserByEmailAndProvider(email, provider);
+            UserRequest user = userService.loadUserByEmailAndProvider(email, provider);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
 
