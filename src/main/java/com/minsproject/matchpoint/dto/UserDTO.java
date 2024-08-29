@@ -11,7 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,12 +37,12 @@ public class UserDTO implements UserDetails {
 
     private UserStatus status;
 
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-    private Timestamp modifiedAt;
+    private LocalDateTime modifiedAt;
 
     @Builder
-    private UserDTO(Long userId, String email, String password, String name, String mobileNumber, String socialLoginType, String socialLoginId, UserRole role, UserStatus status, Timestamp createdAt, Timestamp modifiedAt) {
+    private UserDTO(Long userId, String email, String password, String name, String mobileNumber, String socialLoginType, String socialLoginId, UserRole role, UserStatus status, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.userId = userId;
         this.email = email;
         this.name = name;
@@ -105,22 +105,5 @@ public class UserDTO implements UserDetails {
     @JsonIgnore
     public boolean isEnabled() {
         return false;
-    }
-
-    @Override
-    public String toString() {
-        return "UsersDTO{" +
-                "userId=" + userId +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", mobilNumber='" + mobileNumber + '\'' +
-                ", socialLoginType='" + socialLoginType + '\'' +
-                ", socialLoginId='" + socialLoginId + '\'' +
-                ", role=" + role +
-                ", status=" + status +
-                ", createdAt=" + createdAt +
-                ", modifiedAt=" + modifiedAt +
-                '}';
     }
 }

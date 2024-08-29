@@ -30,7 +30,9 @@ public class MatchResponse {
 
     private String message;
 
-    private MatchResponse(Long matchId, String inviter, String invitee, String sportName, String city, String district, String neighborhood, String detailAddress, String placeName, LocalDateTime matchDay, String message) {
+    private String status;;
+
+    private MatchResponse(Long matchId, String inviter, String invitee, String sportName, String city, String district, String neighborhood, String detailAddress, String placeName, LocalDateTime matchDay, String message, String status) {
         this.matchId = matchId;
         this.inviter = inviter;
         this.invitee = invitee;
@@ -42,6 +44,7 @@ public class MatchResponse {
         this.placeName = placeName;
         this.matchDay = matchDay;
         this.message = message;
+        this.status = status;
     }
 
     public static MatchResponse fromEntity(Match entity) {
@@ -56,7 +59,8 @@ public class MatchResponse {
                 entity.getPlace().getDetailAddress(),
                 entity.getPlace().getName(),
                 entity.getMatchDay(),
-                entity.getMessage()
+                entity.getMessage(),
+                entity.getStatus().name()
         );
     }
 }
