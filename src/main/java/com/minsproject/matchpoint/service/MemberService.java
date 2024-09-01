@@ -3,7 +3,7 @@ package com.minsproject.matchpoint.service;
 import com.minsproject.matchpoint.dto.request.MemberCreateRequest;
 import com.minsproject.matchpoint.dto.request.MemberSearchRequest;
 import com.minsproject.matchpoint.dto.response.MemberResponse;
-import com.minsproject.matchpoint.dto.response.MemberWithDistance;
+import com.minsproject.matchpoint.entity.MemberWithDistance;
 import com.minsproject.matchpoint.dto.response.MemberWithDistanceResponse;
 import com.minsproject.matchpoint.entity.Member;
 import com.minsproject.matchpoint.entity.Sport;

@@ -1,9 +1,7 @@
 package com.minsproject.matchpoint.service
 
-import com.minsproject.matchpoint.dto.TeamSearchDTO
-import com.minsproject.matchpoint.dto.response.TeamResponse
+
 import com.minsproject.matchpoint.entity.Sport
-import com.minsproject.matchpoint.entity.Team
 
 import spock.lang.Specification
 import spock.lang.Subject

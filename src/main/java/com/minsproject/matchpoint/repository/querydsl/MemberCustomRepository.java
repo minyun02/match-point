@@ -1,7 +1,7 @@
 package com.minsproject.matchpoint.repository.querydsl;
 
 import com.minsproject.matchpoint.dto.request.MemberSearchRequest;
-import com.minsproject.matchpoint.dto.response.MemberWithDistance;
+import com.minsproject.matchpoint.entity.MemberWithDistance;
 
 import java.util.List;
 

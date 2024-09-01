@@ -1,6 +1,6 @@
 package com.minsproject.matchpoint.config.jwt;
 
-import com.minsproject.matchpoint.dto.UserRequest;
+import com.minsproject.matchpoint.dto.request.UserRequest;
 import com.minsproject.matchpoint.entity.UserToken;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;

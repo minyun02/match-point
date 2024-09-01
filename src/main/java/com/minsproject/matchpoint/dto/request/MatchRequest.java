@@ -1,4 +1,4 @@
-package com.minsproject.matchpoint.dto;
+package com.minsproject.matchpoint.dto.request;
 
 import com.minsproject.matchpoint.constant.status.MatchStatus;
 import com.minsproject.matchpoint.entity.*;

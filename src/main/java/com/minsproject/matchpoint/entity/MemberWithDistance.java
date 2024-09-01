@@ -1,4 +1,4 @@
-package com.minsproject.matchpoint.dto.response;
+package com.minsproject.matchpoint.entity;
 
 import com.minsproject.matchpoint.entity.Member;
 import lombok.Getter;
