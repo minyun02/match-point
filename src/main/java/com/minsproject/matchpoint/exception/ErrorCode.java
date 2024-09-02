@@ -32,6 +32,8 @@ public enum ErrorCode {
 
     MATCH_RESPOND_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "요청하신 매칭 응답에 권한이 없습니다."),
 
+    MATCH_VIEW_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "해당 매칭에 접근권한이 없습니다."),
+
     // BAD_REQUEST
     DUPLICATED_USER_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입한 이메일입니다."),
 

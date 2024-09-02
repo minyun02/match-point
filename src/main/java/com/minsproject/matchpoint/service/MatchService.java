@@ -69,6 +69,23 @@ public class MatchService {
         return matchRepository.save(match);
     }
 
+    public Match viewMatch(Long matchId, Long memberId) {
+        Match match = matchRepository.findById(matchId).orElseThrow(() -> new MatchPointException(ErrorCode.MATCH_NOT_FOUND));
+
+        if (!isParticipant(memberId, match)) {
+            throw new MatchPointException(ErrorCode.MATCH_VIEW_UNAUTHORIZED);
+        }
+
+        return match;
+    }
+
+    private boolean isParticipant(Long memberId, Match match) {
+        long inviterId = match.getInviter().getId();
+        long inviteeId = match.getInvitee().getId();
+
+        return memberId == inviterId || memberId == inviteeId;
+    }
+
     private void validateMatchStatus(Member inviter, Member invitee) {
         if (!inviter.canMatch()) {
             throw new MatchPointException(ErrorCode.MATCH_INVITER_CANNOT_MATCH);
