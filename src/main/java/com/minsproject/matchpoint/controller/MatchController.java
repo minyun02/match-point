@@ -38,9 +38,16 @@ public class MatchController {
                 .toList();
     }
 
+    @GetMapping("/{matchId}")
+    @Operation(summary = "매칭 상세보기")
+    @ApiResponse(responseCode = "200", description = "매칭 상세보기")
+    public MatchResponse view(@PathVariable Long matchId, @RequestParam Long memberId) {
+        return MatchResponse.fromEntity(matchService.viewMatch(matchId, memberId));
+    }
+
     @PutMapping("/{matchId}/respond")
-    @Operation(summary = "매칭 상태 변경")
-    @ApiResponse(responseCode = "200", description = "매칭의 상태를 변경하고 변경된 매칭 정보를 반환한다.")
+    @Operation(summary = "매칭 취소/수락/거절")
+    @ApiResponse(responseCode = "200", description = "매칭의 상태를 취소/수락/거절하고 변경된 매칭 정보를 반환한다.")
     public MatchResponse modifyStatus(@PathVariable Long matchId, @RequestBody MatchRespondRequest request) {
         return MatchResponse.fromEntity(matchService.modifyStatus(matchId, request));
     }
