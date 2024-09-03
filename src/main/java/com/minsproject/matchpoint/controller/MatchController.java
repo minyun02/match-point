@@ -1,8 +1,6 @@
 package com.minsproject.matchpoint.controller;
 
-import com.minsproject.matchpoint.dto.request.MatchRequest;
-import com.minsproject.matchpoint.dto.request.MatchRespondRequest;
-import com.minsproject.matchpoint.dto.request.MatchSearchRequest;
+import com.minsproject.matchpoint.dto.request.*;
 import com.minsproject.matchpoint.dto.response.MatchResponse;
 import com.minsproject.matchpoint.service.MatchService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,5 +48,12 @@ public class MatchController {
     @ApiResponse(responseCode = "200", description = "매칭의 상태를 취소/수락/거절하고 변경된 매칭 정보를 반환한다.")
     public MatchResponse modifyStatus(@PathVariable Long matchId, @RequestBody MatchRespondRequest request) {
         return MatchResponse.fromEntity(matchService.modifyStatus(matchId, request));
+    }
+
+    @PostMapping("/{matchId}/result")
+    @Operation(summary = "매칭 결과 입력")
+    @ApiResponse(responseCode = "200", description = "매칭의 결과를 입력한다")
+    public ResultResponse result(@PathVariable Long matchId, @Valid MatchResultRequest request) {
+        return ResultResponse.fromEntity(matchService.result(matchId, request));
     }
 }

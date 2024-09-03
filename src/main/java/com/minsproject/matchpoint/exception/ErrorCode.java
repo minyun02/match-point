@@ -63,6 +63,12 @@ public enum ErrorCode {
 
     MATCH_INVALID_STATUS(HttpStatus.BAD_REQUEST, "올바른 매칭 응답 요청이 아닙니다."),
 
+    MATCH_NOT_FINISHED(HttpStatus.BAD_REQUEST, "종료되지 않은 매칭입니다."),
+
+    RESULT_TYPE_INVALID(HttpStatus.BAD_REQUEST, "올바른 매칭 결과가 아닙니다."),
+
+    RESULT_ALREADY_SUBMITTED(HttpStatus.BAD_REQUEST, "이미 매칭 결과를 입력했습니다."),
+
     ;
 
     private HttpStatus status;

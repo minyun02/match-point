@@ -49,7 +49,7 @@ public class MatchResponse {
 
     public static MatchResponse fromEntity(Match entity) {
         return new MatchResponse(
-                entity.getMatchId(),
+                entity.getId(),
                 entity.getInviter().getNickname(),
                 entity.getInvitee().getNickname(),
                 entity.getSport().getName(),

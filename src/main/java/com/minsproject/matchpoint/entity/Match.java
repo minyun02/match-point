@@ -14,7 +14,7 @@ public class Match extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long matchId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inviter_id")
@@ -58,5 +58,9 @@ public class Match extends BaseEntity {
 
     public void updateStatus(MatchStatus status) {
         this.status = status;
+    }
+
+    public boolean isFinished() {
+        return this.status == MatchStatus.FINISHED && this.matchDay.isBefore(LocalDateTime.now());
     }
 }

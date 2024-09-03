@@ -1,17 +1,13 @@
 package com.minsproject.matchpoint.service;
 
 import com.minsproject.matchpoint.constant.status.MatchStatus;
-import com.minsproject.matchpoint.dto.request.MatchRequest;
-import com.minsproject.matchpoint.dto.request.MatchRespondRequest;
-import com.minsproject.matchpoint.dto.request.MatchSearchRequest;
-import com.minsproject.matchpoint.entity.Match;
-import com.minsproject.matchpoint.entity.Member;
-import com.minsproject.matchpoint.entity.Place;
-import com.minsproject.matchpoint.entity.Sport;
+import com.minsproject.matchpoint.dto.request.*;
+import com.minsproject.matchpoint.entity.*;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.MatchRepository;
 import com.minsproject.matchpoint.repository.MemberRepository;
+import com.minsproject.matchpoint.repository.ResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +27,8 @@ public class MatchService {
     private final MemberRepository memberRepository;
 
     private final MatchRepository matchRepository;
+
+    private final ResultRepository resultRepository;
 
     @Transactional
     public Match createMatch(MatchRequest request) {
@@ -79,11 +77,41 @@ public class MatchService {
         return match;
     }
 
+    public Result result(Long matchId, MatchResultRequest request) {
+        validateResultType(request.getResultType());
+
+        Match match = matchRepository.findById(matchId).orElseThrow(() -> new MatchPointException(ErrorCode.MATCH_NOT_FOUND));
+
+        if (!isParticipant(request.getMemberId(), match)) {
+            throw new MatchPointException(ErrorCode.MATCH_VIEW_UNAUTHORIZED);
+        }
+
+        if (!match.isFinished()) {
+            throw new MatchPointException(ErrorCode.MATCH_NOT_FINISHED);
+        }
+
+        boolean haveSubmittedResult = resultRepository.findByMatchIdAndMemberId(matchId, request.getMemberId()).isPresent();
+        if (haveSubmittedResult) {
+            throw new MatchPointException(ErrorCode.RESULT_ALREADY_SUBMITTED);
+        }
+
+        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> new MatchPointException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return resultRepository.save(MatchResultRequest.toEntity(match, request.getResultType(), member));
+    }
+
+    private void validateResultType(String resultType) {
+        if ("W".equals(resultType) || "L".equals(resultType)) {
+            return;
+        }
+        throw new MatchPointException(ErrorCode.RESULT_TYPE_INVALID);
+    }
+
     private boolean isParticipant(Long memberId, Match match) {
         long inviterId = match.getInviter().getId();
         long inviteeId = match.getInvitee().getId();
 
-        return memberId == inviterId || memberId == inviteeId;
+        return memberId == inviterId && memberId == inviteeId;
     }
 
     private void validateMatchStatus(Member inviter, Member invitee) {
