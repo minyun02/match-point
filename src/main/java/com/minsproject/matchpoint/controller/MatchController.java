@@ -53,7 +53,7 @@ public class MatchController {
     @PostMapping("/{matchId}/result")
     @Operation(summary = "매칭 결과 입력")
     @ApiResponse(responseCode = "200", description = "매칭의 결과를 입력한다")
-    public ResultResponse result(@PathVariable Long matchId, @Valid MatchResultRequest request) {
+    public ResultResponse result(@PathVariable Long matchId, @Valid @RequestBody MatchResultRequest request) {
         return ResultResponse.fromEntity(matchService.result(matchId, request));
     }
 }

@@ -111,7 +111,7 @@ public class MatchService {
         long inviterId = match.getInviter().getId();
         long inviteeId = match.getInvitee().getId();
 
-        return memberId == inviterId && memberId == inviteeId;
+        return memberId == inviterId || memberId == inviteeId;
     }
 
     private void validateMatchStatus(Member inviter, Member invitee) {
