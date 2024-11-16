@@ -1,4 +1,4 @@
-package com.minsproject.matchpoint.constant;
+package com.minsproject.matchpoint.constant.role;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.minsproject.matchpoint.config.dto;
 
-import com.minsproject.matchpoint.constant.UserRole;
+import com.minsproject.matchpoint.constant.role.UserRole;
 import com.minsproject.matchpoint.constant.status.UserStatus;
 import com.minsproject.matchpoint.entity.User;
 import jakarta.security.auth.message.AuthException;

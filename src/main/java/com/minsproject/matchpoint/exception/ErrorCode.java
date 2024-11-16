@@ -69,6 +69,8 @@ public enum ErrorCode {
 
     RESULT_ALREADY_SUBMITTED(HttpStatus.BAD_REQUEST, "이미 매칭 결과를 입력했습니다."),
 
+    INVALID_MATCH_RESULT(HttpStatus.BAD_REQUEST, "매칭 결과에서 문제가 발생했습니다")
+
     ;
 
     private HttpStatus status;
