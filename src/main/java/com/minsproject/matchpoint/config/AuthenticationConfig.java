@@ -38,7 +38,7 @@ public class AuthenticationConfig {
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(PathRequest.toH2Console()).permitAll()
-                    .requestMatchers("/api/*/users/join", "/api/*/users/login").permitAll()
+                    .requestMatchers("/api/*/users/join", "/api/*/users/login", "/api/*/users/token", "/api/*/users/provider").permitAll()
                     .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated()
             )
