@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SportProfileController {
 
-    private SportProfileService sportProfileService;
+    private final SportProfileService sportProfileService;
 
     @GetMapping("/nickname")
     @Operation(summary = "회원가입에서 닉네임 중복여부 확인")

@@ -3,14 +3,13 @@ package com.minsproject.matchpoint.entity;
 import com.minsproject.matchpoint.constant.role.UserRole;
 import com.minsproject.matchpoint.constant.status.UserStatus;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@ToString
 @Getter
 @NoArgsConstructor
 @Entity(name = "users")
@@ -33,8 +32,10 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String providerId;
 
-    @Column(nullable = false)
+    @Getter @Setter
     private String token;
+
+    @Setter private String currentSport;
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
@@ -46,18 +47,23 @@ public class User extends BaseEntity {
 
     private Timestamp lastLoginAt;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private List<SportProfile> sportProfiles;
 
     @Builder
-    public User(String name, String email, String provider, String providerId, UserRole role, UserStatus status) {
-        this.name = name;
+    public User(Long id, String email, String name, String provider, String providerId, String currentSport, String token, UserRole role, UserStatus status, Timestamp lastLoginAt, List<SportProfile> sportProfiles) {
+        this.id = id;
         this.email = email;
+        this.name = name;
         this.provider = provider;
         this.providerId = providerId;
+        this.currentSport = currentSport;
+        this.token = token;
         this.role = role;
         this.status = status;
+        this.lastLoginAt = lastLoginAt;
+        this.sportProfiles = sportProfiles;
     }
 
     public User updateLastLoginDate() {
