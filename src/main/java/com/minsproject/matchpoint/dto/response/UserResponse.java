@@ -4,10 +4,14 @@ import com.minsproject.matchpoint.constant.role.UserRole;
 import com.minsproject.matchpoint.constant.status.UserStatus;
 import com.minsproject.matchpoint.entity.SportProfile;
 import com.minsproject.matchpoint.entity.User;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@ToString
+@Getter
 public class UserResponse {
 
     private Long id;
@@ -20,20 +24,23 @@ public class UserResponse {
 
     private String providerId;
 
+    private String currentSport;
+
     private UserRole role;
 
     private UserStatus status;
 
     private Timestamp lastLoginAt;
 
-    private List<SportProfile> sportProfiles;
+    private List<SportProfileResponse> sportProfiles;
 
-    private UserResponse(Long id, String name, String email, String provider, String providerId, UserRole role, UserStatus status, Timestamp lastLoginAt, List<SportProfile> sportProfiles) {
+    private UserResponse(Long id, String name, String email, String provider, String providerId, String currentSport, UserRole role, UserStatus status, Timestamp lastLoginAt, List<SportProfileResponse> sportProfiles) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.provider = provider;
         this.providerId = providerId;
+        this.currentSport = currentSport;
         this.role = role;
         this.status = status;
         this.lastLoginAt = lastLoginAt;
@@ -47,10 +54,11 @@ public class UserResponse {
             entity.getEmail(),
             entity.getProvider(),
             entity.getProviderId(),
+            entity.getCurrentSport(),
             entity.getRole(),
             entity.getStatus(),
             entity.getLastLoginAt(),
-            entity.getSportProfiles()
+            entity.getSportProfiles().stream().map(SportProfileResponse::fromEntity).toList()
         );
     }
 }

@@ -69,9 +69,21 @@ public enum ErrorCode {
 
     RESULT_ALREADY_SUBMITTED(HttpStatus.BAD_REQUEST, "이미 매칭 결과를 입력했습니다."),
 
-    INVALID_MATCH_RESULT(HttpStatus.BAD_REQUEST, "매칭 결과에서 문제가 발생했습니다")
+    INVALID_MATCH_RESULT(HttpStatus.BAD_REQUEST, "매칭 결과에서 문제가 발생했습니다"),
 
-    ;
+    CANNOT_SIGN_UP(HttpStatus.BAD_REQUEST, "회원가입 실패"),
+
+    FILE_IS_EMPTY(HttpStatus.BAD_REQUEST, "파일이 비어있습니다."),
+
+    FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 사이즈가 너무 큽니다."),
+
+    FILE_NAME_INVALID(HttpStatus.BAD_REQUEST, "잘못된 파일명입니다."),
+
+    FILE_EXTENSION_NOT_SUPPORTED(HttpStatus.BAD_REQUEST, "지원하지 않는 파일 형식입니다."),
+
+    FILE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "파일 저장 중 오류가 발생했습니다."),
+
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST, "올바른 토큰이 아닙니다.");
 
     private HttpStatus status;
     private String message;

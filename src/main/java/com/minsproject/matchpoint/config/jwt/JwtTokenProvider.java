@@ -1,11 +1,11 @@
 package com.minsproject.matchpoint.config.jwt;
 
 import com.minsproject.matchpoint.dto.request.UserRequest;
+import com.minsproject.matchpoint.entity.User;
 import com.minsproject.matchpoint.entity.UserToken;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.service.TokenService;
-import com.minsproject.matchpoint.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
@@ -36,9 +36,9 @@ public class JwtTokenProvider {
     private static final String BEARER_PREFIX = "Bearer= ";
     private static final String CLAIMS_EMAIL = "email";
     private static final String CLAIMS_PROVIDER = "provider";
+    private static final String CLAIMS_PROVIDER_ID = "providerId";
 
     private final TokenService tokenService;
-    private final UserService userService;
 
     public String getClaimsEmail(String token) {
         return extractClaims(token).get(CLAIMS_EMAIL, String.class);
@@ -96,10 +96,27 @@ public class JwtTokenProvider {
         claims.put(CLAIMS_EMAIL, email);
         claims.put(CLAIMS_PROVIDER, provider);
 
+        return generateTokenWithClaims(claims, expiredTime);
+    }
+
+    public String generateAccessTokenFromUser(User user) {
+        return generateTokenFromUser(user, EXPIRED_TIME_MS);
+    }
+
+    private String generateTokenFromUser(User user, Long expiredTimeMs) {
+        Claims claims = Jwts.claims();
+        claims.put(CLAIMS_EMAIL, user.getEmail());
+        claims.put(CLAIMS_PROVIDER, user.getProvider());
+        claims.put(CLAIMS_PROVIDER_ID, user.getProviderId());
+
+        return generateTokenWithClaims(claims, expiredTimeMs);
+    }
+
+    private String generateTokenWithClaims(Claims claims, Long expiredTimeMs) {
         return BEARER_PREFIX + Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiredTime))
+                .setExpiration(new Date(System.currentTimeMillis() + expiredTimeMs))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -108,16 +125,11 @@ public class JwtTokenProvider {
         UserToken userToken = tokenService.getTokenByAccessToken(token);
 
         if (validateToken(userToken.getRefreshToken())) {
-            String email = getClaimsEmail(token);
-            String provider = getClaimsProvider(token);
-            UserRequest user = userService.loadUserByEmailAndProvider(email, provider);
-            String newAccessToken = generateAccessToken(getAuthentication(token, user));
-            tokenService.updateAccessToken(newAccessToken, email, provider);
-
-            return newAccessToken;
+            Claims claims = extractClaims(token);
+            return generateTokenWithClaims(claims, EXPIRED_TIME_MS);
         }
 
-        return "";
+        throw new MatchPointException(ErrorCode.INVALID_TOKEN);
     }
 
     private Key getKey() {
