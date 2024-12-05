@@ -13,6 +13,7 @@ public class SportProfile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "profile_id")
     private Long id;
 
     @ManyToOne
