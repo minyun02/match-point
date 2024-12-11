@@ -20,7 +20,6 @@ public class AuthenticationConfig {
 
     private final JwtTokenFilter jwtTokenFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -48,11 +47,6 @@ public class AuthenticationConfig {
             )
             .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .oauth2Login(oAuth -> oAuth
-                    .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                    .successHandler(oAuth2SuccessHandler)
-                    .permitAll()
             )
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
         ;
