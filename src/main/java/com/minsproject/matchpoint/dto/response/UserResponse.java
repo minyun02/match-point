@@ -1,18 +1,22 @@
 package com.minsproject.matchpoint.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.minsproject.matchpoint.constant.role.UserRole;
 import com.minsproject.matchpoint.constant.status.UserStatus;
-import com.minsproject.matchpoint.entity.SportProfile;
 import com.minsproject.matchpoint.entity.User;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 
 @ToString
 @Getter
-public class UserResponse {
+public class UserResponse implements UserDetails {
 
     private Long id;
 
@@ -60,5 +64,45 @@ public class UserResponse {
             entity.getLastLoginAt(),
             entity.getSportProfiles().stream().map(SportProfileResponse::fromEntity).toList()
         );
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(this.getRole().toString()));
+    }
+
+    @Override
+    public String getPassword() {
+        return "";
+    }
+
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return this.name;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return false;
     }
 }

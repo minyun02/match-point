@@ -8,5 +8,7 @@ import java.util.Optional;
 public interface TokenRepository extends JpaRepository<UserToken, Long> {
     Optional<UserToken> findByEmailAndProvider(String email, String provider);
 
-    Optional<UserToken> findByAccessToken(String accessToken);
+    Optional<UserToken> findByToken(String accessToken);
+
+    Optional<UserToken> findByRefreshToken(String refreshToken);
 }

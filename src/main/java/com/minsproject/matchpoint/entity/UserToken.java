@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 @Entity
 public class UserToken {
@@ -20,28 +21,27 @@ public class UserToken {
 
     private String provider;
 
-    private String accessToken;
+    private String token;
 
-    @Getter
     private String refreshToken;
 
     @Builder
-    private UserToken(String email, String provider, String accessToken, String refreshToken) {
+    private UserToken(String email, String provider, String token, String refreshToken) {
         this.email = email;
         this.provider = provider;
-        this.accessToken = accessToken;
+        this.token = token;
         this.refreshToken = refreshToken;
     }
 
-    public UserToken updateRefreshAndAccessToken(String refreshToken, String accessToken) {
+    public UserToken updateTokenAndRefreshToken(String token, String refreshToken) {
+        this.token = token;
         this.refreshToken = refreshToken;
-        this.accessToken = accessToken;
 
         return this;
     }
 
-    public UserToken updateAccessToken(String newAccessToken) {
-        this.accessToken = newAccessToken;
+    public UserToken updateToken(String newToken) {
+        this.token = newToken;
 
         return this;
     }
