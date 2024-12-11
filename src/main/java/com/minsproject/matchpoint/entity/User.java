@@ -32,9 +32,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String providerId;
 
-    @Getter @Setter
-    private String token;
-
     @Setter private String currentSport;
 
     @Column(name = "role")
@@ -52,14 +49,13 @@ public class User extends BaseEntity {
     private List<SportProfile> sportProfiles;
 
     @Builder
-    public User(Long id, String email, String name, String provider, String providerId, String currentSport, String token, UserRole role, UserStatus status, Timestamp lastLoginAt, List<SportProfile> sportProfiles) {
+    public User(Long id, String email, String name, String provider, String providerId, String currentSport, UserRole role, UserStatus status, Timestamp lastLoginAt, List<SportProfile> sportProfiles) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.provider = provider;
         this.providerId = providerId;
         this.currentSport = currentSport;
-        this.token = token;
         this.role = role;
         this.status = status;
         this.lastLoginAt = lastLoginAt;

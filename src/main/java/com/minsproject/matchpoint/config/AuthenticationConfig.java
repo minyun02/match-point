@@ -20,7 +20,6 @@ public class AuthenticationConfig {
 
     private final JwtTokenFilter jwtTokenFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -38,7 +37,7 @@ public class AuthenticationConfig {
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(PathRequest.toH2Console()).permitAll()
-                    .requestMatchers("/api/*/users/join", "/api/*/users/login", "/api/*/users/token", "/api/*/users/provider").permitAll()
+                    .requestMatchers("/api/*/auth/refresh", "/api/*/auth/token", "/api/*/users/signup", "/api/*/users/login", "/api/*/users/token", "/api/*/users/provider", "/api/*/profiles/nickname").permitAll()
                     .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated()
             )
@@ -48,11 +47,6 @@ public class AuthenticationConfig {
             )
             .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .oauth2Login(oAuth -> oAuth
-                    .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                    .successHandler(oAuth2SuccessHandler)
-                    .permitAll()
             )
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
         ;

@@ -1,6 +1,6 @@
 package com.minsproject.matchpoint.config.jwt;
 
-import com.minsproject.matchpoint.dto.request.UserRequest;
+import com.minsproject.matchpoint.dto.response.UserResponse;
 import com.minsproject.matchpoint.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @Component
@@ -24,15 +25,14 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-
     private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         final String header = request.getHeader(AUTHORIZATION);
-
-        if (header == null || !header.startsWith("Bearer=")) {
+        System.out.println("header = " + header);
+        if (header == null || !header.startsWith("Bearer ")) {
             log.error("Error occurs while getting header. header is null or invalid {}", request.getRequestURL());
             filterChain.doFilter(request, response);
             return;
@@ -42,12 +42,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String token = header.split(" ")[1].trim();
 
             if (!jwtTokenProvider.validateToken(token)) {
-                token = jwtTokenProvider.generateNewAccessToken(token);
+                log.error("Invalid token");
+                response.setStatus(UNAUTHORIZED.value());
+                return;
             }
-
             String email = jwtTokenProvider.getClaimsEmail(token);
             String provider = jwtTokenProvider.getClaimsProvider(token);
-            UserRequest user = userService.loadUserByEmailAndProvider(email, provider);
+            UserResponse user = userService.loadUserByEmailAndProvider(email, provider);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
 
@@ -55,11 +56,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (RuntimeException e) {
             log.error("Error occurs while validating {}", e.toString());
-            filterChain.doFilter(request, response);
+            response.setStatus(UNAUTHORIZED.value());
             return;
         }
 
         filterChain.doFilter(request, response);
-
     }
 }
