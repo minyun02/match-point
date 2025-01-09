@@ -26,7 +26,7 @@ public class AuthController {
     @PostMapping("/refresh")
     @Operation(summary = "토큰 갱신")
     @ApiResponse(responseCode = "200", description = "갱신된 token, refreshToken을 반환한다.")
-    public TokenResponse refreshToken(@RequestHeader("Authorization") String refreshToken) {
+    public TokenResponse refreshToken(@RequestBody String refreshToken) {
         return tokenService.refreshToken(refreshToken);
     }
 }

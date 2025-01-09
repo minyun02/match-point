@@ -8,6 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class SportProfileDTO {
+    private Long userId;
     private String nickname;
     private String sportType;
     private String sido;

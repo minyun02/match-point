@@ -20,10 +20,12 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Match> list(SportType sportType, String sort, Long lastId, Integer pageSize) {
+    public List<Match> list(Long userId, SportType sportType, String sort, Long lastId, Integer pageSize) {
+
         return queryFactory
                 .selectFrom(match)
                 .where(
+                    match.inviter.user.id.eq(userId).or(match.invitee.user.id.eq(userId)),
                     sportTypeEq(sportType),
                     idGt(lastId)
                 )
@@ -33,7 +35,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository {
     }
 
     private OrderSpecifier<?> createOrderSpecifier(String sort, QMatch match) {
-        if (sort == null) return match.id.desc();
+        if (sort.isEmpty()) return match.id.desc();
 
         String[] parts = sort.split(",");
         String field = parts[0];

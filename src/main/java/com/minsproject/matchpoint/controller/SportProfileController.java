@@ -1,13 +1,16 @@
 package com.minsproject.matchpoint.controller;
 
+import com.minsproject.matchpoint.dto.request.SportProfileDTO;
+import com.minsproject.matchpoint.dto.response.ProfileRecommendationResponse;
+import com.minsproject.matchpoint.dto.response.SportProfileResponse;
 import com.minsproject.matchpoint.service.SportProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/profiles")
@@ -21,5 +24,75 @@ public class SportProfileController {
     @ApiResponse(responseCode = "200", description = "닉네임 중복여부를 확인하고 boolean을 반환한다")
     public Boolean checkNicknameDuplication(@RequestParam String nickname) {
         return sportProfileService.checkNicknameDuplication(nickname);
+    }
+
+    @GetMapping("/{profileId}")
+    @Operation(summary = "스포츠 프로필 아이디 조회")
+    @ApiResponse(responseCode = "200", description = "조회된 프로필 정보를 반환한다.")
+    public SportProfileResponse getProfileById(@PathVariable Long profileId) {
+        return SportProfileResponse.fromEntity(sportProfileService.getProfileById(profileId));
+    }
+
+    @GetMapping("/rankings")
+    @Operation(summary = "해당 스포츠 순위 조회")
+    @ApiResponse(responseCode = "200", description = "페이지 크기에 맞는 순위 목록을 반환한다.")
+    public List<SportProfileResponse> getTopRankings(@RequestParam String sportType,
+                                                     @RequestParam String range,
+                                                     @RequestParam String address,
+                                                     @RequestParam Integer pageSize,
+                                                     @RequestParam(required = false) Long lastId,
+                                                     @RequestParam(required = false) String sort) {
+        return sportProfileService.getTopRankings(sportType, range, address, pageSize, lastId, sort).stream()
+                .map(SportProfileResponse::fromEntity)
+                .toList();
+    }
+
+    @PostMapping
+    @Operation(summary = "새로운 프로필 추가")
+    @ApiResponse(responseCode = "200", description = "생성 성공 boolean 값을 반환한다.")
+    public boolean create(@RequestPart("request") SportProfileDTO request,
+                          @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
+    ) {
+        return sportProfileService.create(request, profileImage);
+    }
+
+    @PutMapping("/{profileId}")
+    @Operation(summary = "프로필 수정")
+    @ApiResponse(responseCode = "200", description = "수정된 프로필을 반환한다.")
+    public SportProfileResponse modify(
+            @PathVariable Long profileId,
+            @RequestPart("request") SportProfileDTO request,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
+    ) {
+        return SportProfileResponse.fromEntity(sportProfileService.modify(profileId, request, profileImage));
+    }
+
+    @GetMapping
+    @Operation(summary = "매칭 가능한 프로필 목록 조회")
+    @ApiResponse(responseCode = "200", description = "검색 조건에 맞는 프로필 목록을 반환한다.")
+    public List<SportProfileResponse> getMatchableProfileList(@RequestParam Long profileId,
+                                                              @RequestParam String searchWord,
+                                                              @RequestParam String sort,
+                                                              @RequestParam Integer distance,
+                                                              @RequestParam Long lastId,
+                                                              @RequestParam Integer pageSize
+    ) {
+        return sportProfileService.getProfileListForMatch(profileId, searchWord, sort, distance, lastId, pageSize)
+                .stream()
+                .map(SportProfileResponse::of)
+                .toList();
+    }
+
+    @GetMapping("/recommendations")
+    @Operation(summary = "매칭 추천 목록")
+    @ApiResponse(responseCode = "200", description = "매칭 추천 목록을 반환한다.")
+    public List<ProfileRecommendationResponse> getRecommendations(
+            @RequestParam Long profileId,
+            @RequestParam Long lastId,
+            @RequestParam Integer pageSize
+    ) {
+        return sportProfileService.getRecommendations(profileId, lastId, pageSize).stream()
+                .map(ProfileRecommendationResponse::fromEntity)
+                .toList();
     }
 }

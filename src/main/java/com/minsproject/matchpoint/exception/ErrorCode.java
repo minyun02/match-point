@@ -27,6 +27,8 @@ public enum ErrorCode {
 
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰 정보를 찾을 수 없습니다."),
 
+    PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "프로필을 찾을 수 없습니다."),
+
     // UNAUTHORIZED
     MODIFICATION_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "수정할 수 없습니다."),
 
@@ -37,6 +39,12 @@ public enum ErrorCode {
     MATCH_VIEW_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "해당 매칭에 접근권한이 없습니다."),
 
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "잘못된 REFRESH TOKEN입니다."),
+
+    EMPTY_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "REFRESH TOKEN이 없습니다."),
+
+    MATCH_STATUS_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "아직 결과를 입력할 수 없습니다."),
+
+    MATCH_RESULT_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "매칭 결과를 입력할 수 없습니다."),
 
     // BAD_REQUEST
     DUPLICATED_USER_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입한 이메일입니다."),
@@ -88,6 +96,13 @@ public enum ErrorCode {
     FILE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "파일 저장 중 오류가 발생했습니다."),
 
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "올바른 토큰이 아닙니다."),
+
+    INVALID_PAGE_SIZE(HttpStatus.BAD_REQUEST, "잘못된 페이지 사이즈입니다."),
+
+    INCORRECT_SPORT_TYPE(HttpStatus.BAD_REQUEST, "매칭하려는 종목이 잘못됐습니다."),
+
+    CANNOT_MATCH_WITH_PROFILE(HttpStatus.BAD_REQUEST, "매칭할 수 없는 상대입니다."),
+
     ;
 
     private HttpStatus status;

@@ -3,9 +3,13 @@ package com.minsproject.matchpoint.dto.response;
 import com.minsproject.matchpoint.constant.status.MatchStatus;
 import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.entity.Match;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor
 public class MatchResponse {
 
     private Long id;
@@ -18,9 +22,9 @@ public class MatchResponse {
     private LocalDateTime acceptedAt;
     private LocalDateTime rejectedAt;
     private LocalDateTime confirmedAt;
-    private Long winnerProfileId;
+    private MatchResultResponse result;
 
-    private MatchResponse(Long id, SportProfileResponse inviter, SportProfileResponse invitee, SportType sportType, MatchStatus status, LocalDateTime matchDate, LocalDateTime canceledAt, LocalDateTime acceptedAt, LocalDateTime rejectedAt, LocalDateTime confirmedAt, Long winnerProfileId) {
+    private MatchResponse(Long id, SportProfileResponse inviter, SportProfileResponse invitee, SportType sportType, MatchStatus status, LocalDateTime matchDate, LocalDateTime canceledAt, LocalDateTime acceptedAt, LocalDateTime rejectedAt, LocalDateTime confirmedAt, MatchResultResponse result) {
         this.id = id;
         this.inviter = inviter;
         this.invitee = invitee;
@@ -31,7 +35,7 @@ public class MatchResponse {
         this.acceptedAt = acceptedAt;
         this.rejectedAt = rejectedAt;
         this.confirmedAt = confirmedAt;
-        this.winnerProfileId = winnerProfileId;
+        this.result = result;
     }
 
     public static MatchResponse fromEntity(Match entity) {
@@ -46,7 +50,7 @@ public class MatchResponse {
                 entity.getAcceptedAt(),
                 entity.getRejectedAt(),
                 entity.getConfirmedAt(),
-                entity.getWinnerProfileId()
+                entity.getResult() == null ? null : MatchResultResponse.fromEntity(entity.getResult())
         );
     }
 }

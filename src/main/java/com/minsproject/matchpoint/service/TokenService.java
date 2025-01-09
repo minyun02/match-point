@@ -8,6 +8,7 @@ import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
@@ -42,30 +43,41 @@ public class TokenService {
         return tokenRepository.findByEmailAndProvider(email, provider);
     }
 
+    @Transactional
     public TokenResponse refreshToken(String refreshToken) {
-        if (!StringUtils.hasText(refreshToken) || !refreshToken.startsWith("Bearer=")) {
-            throw new MatchPointException(ErrorCode.INVALID_REFRESH_TOKEN);
+        if (!StringUtils.hasText(refreshToken) || !refreshToken.startsWith("Bearer ")) {
+            throw new MatchPointException(ErrorCode.EMPTY_REFRESH_TOKEN);
         }
 
-        if (!tokenProvider.validateToken(refreshToken)) {
+        String trimmedRefreshToken = refreshToken.split(" ")[1].trim();
+        if (!tokenProvider.validateToken(trimmedRefreshToken)) {
             throw new MatchPointException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         UserToken userToken = tokenRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new MatchPointException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+        String trimmedToken = refreshToken.split(" ")[1].trim();
 
-        String newAccessToken = tokenProvider.generateNewAccessToken(userToken.getToken(), refreshToken);
+        String newAccessToken = tokenProvider.generateNewAccessToken(trimmedToken, trimmedRefreshToken);
 
         userToken.updateTokenAndRefreshToken(refreshToken, newAccessToken);
-        tokenRepository.save(userToken);
 
         return new TokenResponse(newAccessToken, refreshToken);
     }
 
+    @Transactional
     public TokenResponse generateToken(String email, String provider) {
+        UserToken userToken = tokenRepository.findByEmailAndProvider(email, provider)
+                .orElseThrow(() -> new MatchPointException(ErrorCode.TOKEN_NOU_FOUND));
+
+        String token = tokenProvider.generateAccessToken(email, provider);
+        String refreshToken = tokenProvider.generateRefreshToken(email, provider);
+
+        userToken.updateTokenAndRefreshToken(token, refreshToken);
+
         return new TokenResponse(
-            tokenProvider.generateAccessToken(email, provider),
-            tokenProvider.generateRefreshToken(email, provider)
+                token,
+                refreshToken
         );
     }
 }

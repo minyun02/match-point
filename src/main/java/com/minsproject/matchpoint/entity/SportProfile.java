@@ -1,10 +1,14 @@
 package com.minsproject.matchpoint.entity;
 
+import com.minsproject.matchpoint.dto.request.SportProfileDTO;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 @NoArgsConstructor
@@ -16,11 +20,12 @@ public class SportProfile extends BaseEntity {
     @Column(name = "profile_id")
     private Long id;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String nickname;
+    @Setter private String nickname;
 
     private String sportType;
 
@@ -51,7 +56,10 @@ public class SportProfile extends BaseEntity {
 
     private Integer loses;
 
-    private Integer ranking;
+    @Column(precision = 4, scale = 1)
+    private BigDecimal winRate;
+
+    @Setter private Integer ranking;
 
 
     @Builder
@@ -74,5 +82,25 @@ public class SportProfile extends BaseEntity {
         this.wins = wins;
         this.loses = loses;
         this.ranking = ranking;
+    }
+
+    public void calculateWinRate() {
+        if (wins + loses == 0) {
+            this.winRate = BigDecimal.ZERO;
+            return;
+        }
+
+        this.winRate = BigDecimal.valueOf(wins)
+                .divide(BigDecimal.valueOf(wins + loses), 1, RoundingMode.HALF_UP);
+    }
+
+    public void updateProfileAddress(SportProfileDTO request) {
+        this.sido = request.getSido();
+        this.sigungu = request.getSigungu();
+        this.dong = request.getDong();
+        this.detail = request.getDetail();
+        this.fullAddress = request.getFullAddress();
+        this.latitude = request.getLatitude();
+        this.longitude = request.getLongitude();
     }
 }

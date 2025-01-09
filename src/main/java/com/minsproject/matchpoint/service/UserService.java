@@ -30,8 +30,8 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
-    public UserResponse loadUserByEmailAndProvider(String email, String provider) {
-        return userRepository.findByEmailAndProvider(email, provider).map(UserResponse::fromEntity).orElseThrow(() -> new MatchPointException(ErrorCode.USER_NOT_FOUND));
+    public User loadUserByEmailAndProvider(String email, String provider) {
+        return userRepository.findByEmailAndProvider(email, provider).orElseThrow(() -> new MatchPointException(ErrorCode.USER_NOT_FOUND));
     }
 
     public User getUserByProviderId(String provider, String providerId) {
@@ -58,10 +58,16 @@ public class UserService {
 
         if (!request.getSportProfiles().isEmpty()) {
             SportProfileDTO newSportProfile = request.getSportProfiles().get(0);
-            SportProfile savedProfile = sportProfileService.createProfile(savedUser, newSportProfile);
+
+            long lastRanking = sportProfileService.getLastRanking(newSportProfile.getSportType());
+            if (lastRanking == 0) lastRanking = 1;
+
+            SportProfile savedProfile = sportProfileService.createProfile(newSportProfile);
             if (savedProfile == null) {
                 throw new MatchPointException(ErrorCode.CANNOT_SIGN_UP, "선택한 스포츠 프로필 생성에 실패했습니다.");
             }
+            savedProfile.setUser(savedUser);
+            savedProfile.setRanking((int) lastRanking);
 
             savedUser.setCurrentSport(newSportProfile.getSportType());
 
@@ -74,12 +80,7 @@ public class UserService {
         String refreshToken = jwtTokenProvider.generateRefreshToken(savedUser.getEmail(), savedUser.getProvider());
         tokenService.saveOrUpdate(savedUser.getEmail(), savedUser.getProvider(), token, refreshToken);
 
-        System.out.println("token = " + token);
-        System.out.println("refreshToken = " + refreshToken);
-        return new TokenResponse(
-                token,
-                refreshToken
-        );
+        return new TokenResponse(token, refreshToken);
     }
 
     public User getUserInfoByToken(String token) {

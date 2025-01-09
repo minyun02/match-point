@@ -3,11 +3,16 @@ package com.minsproject.matchpoint.entity;
 import com.minsproject.matchpoint.constant.status.MatchStatus;
 import com.minsproject.matchpoint.constant.type.SportType;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
+@ToString
 @Entity(name = "matches")
 public class Match extends BaseEntity {
 
@@ -39,5 +44,36 @@ public class Match extends BaseEntity {
 
     private LocalDateTime confirmedAt;
 
-    private Long winnerProfileId;
+    @OneToOne(mappedBy = "match")
+    private MatchResult result;
+
+    @Builder
+    private Match(SportProfile inviter, SportProfile invitee, SportType sportType, MatchStatus status, LocalDateTime matchDate, LocalDateTime acceptedAt) {
+        this.inviter = inviter;
+        this.invitee = invitee;
+        this.sportType = sportType;
+        this.status = status;
+        this.matchDate = matchDate;
+        this.acceptedAt = acceptedAt;
+    }
+
+    public static Match createQuickMatch(SportProfile inviter,
+                                         SportProfile invitee,
+                                         SportType sportType,
+                                         MatchStatus status,
+                                         LocalDateTime matchDate,
+                                         LocalDateTime acceptedAt) {
+        return new Match(
+                inviter,
+                invitee,
+                sportType,
+                status,
+                matchDate,
+                acceptedAt
+        );
+    }
+
+    public void updateStatus(MatchStatus matchStatus) {
+        this.status = matchStatus;
+    }
 }

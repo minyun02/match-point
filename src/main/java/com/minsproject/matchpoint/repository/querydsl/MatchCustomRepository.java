@@ -6,5 +6,5 @@ import com.minsproject.matchpoint.entity.Match;
 import java.util.List;
 
 public interface MatchCustomRepository {
-    List<Match> list(SportType sportType, String sort, Long lastId, Integer pageSize);
+    List<Match> list(Long userId, SportType sportType, String sort, Long lastId, Integer pageSize);
 }

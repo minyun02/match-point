@@ -1,12 +1,19 @@
 package com.minsproject.matchpoint.constant.type;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum SportType {
 
-    BADMINTON,
+    BADMINTON("배드민턴"),
 
-    TENNIS,
+    TENNIS("테니스"),
 
-    TABLE_TENNIS,
+    TABLE_TENNIS("탁구"),
 
-    SQUASH;
+    SQUASH("스쿼시");
+
+    private final String name;
 }
