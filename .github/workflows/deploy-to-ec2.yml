@@ -42,7 +42,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          source: "build/libs/*.jar"
+          source: "build/libs/*.jar,scripts/deploy.sh"
           target: "/usr/local/match-point"
 
       - name: Execute deploy script
