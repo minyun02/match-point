@@ -24,7 +24,7 @@ fi
 
 # 새 버전 배포
 echo "[4/5] Deploying new version..."
-ln -sf $DEPLOY_PATH/*.jar $JAR_PATH
+cp $DEPLOY_PATH/*.jar $JAR_PATH
 nohup java -jar $JAR_PATH > $LOG_PATH/applications.log 2>&1 &
 
 # 배포 결과 확인
