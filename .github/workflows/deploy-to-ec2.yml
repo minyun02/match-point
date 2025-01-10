@@ -8,11 +8,30 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Get Public IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-region: 'ap-northeast-2c'
+
+      - name: Add Github Actions IP
+        run: |
+          aws ec2 authorize-security-group-ingress \
+              --group-id ${{ SECURITY_GROUP_ID }} \
+              --protocol tcp \
+              --port 22 \
+              --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'
+          distribution: 'corretto'
 
       - name: Build with Gradle
         run: ./gradlew build -x test
@@ -36,3 +55,11 @@ jobs:
             cd /usr/local/match-point
             chmod +x deploy.sh
             ./deploy.sh
+
+      - name: Remove Github Actions IP
+        run: |
+          aws ec2 revoke-security-group-ingress \
+              --group-id ${{ SECURITY_GROUP_ID }} \
+              --protocol tcp \
+              --port 22 \
+              --cidr ${{ steps.ip.outputs.ipv4 }}/32
