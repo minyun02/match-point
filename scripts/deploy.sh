@@ -2,7 +2,7 @@
 APP_NAME="match-point"
 DEPLOY_PATH="/usr/local/match-point"
 JAR_PATH="$DEPLOY_PATH/$APP_NAME.jar"
-LOG_PATH="/var/log/app"
+LOG_PATH="/var/log/match-point"
 
 # 현재 시간 기록
 echo "[1/5] Starting deployment process..."
