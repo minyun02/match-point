@@ -24,7 +24,7 @@ fi
 
 # 새 버전 배포
 echo "[4/5] Deploying new version..."
-cp $DEPLOY_PATH/build/libs/matchpoint-*[^plain].jar $JAR_PATH
+cp $DEPLOY_PATH/build/libs/matchpoint-0.0.1-SNAPSHOT.jar $JAR_PATH
 nohup java -jar $JAR_PATH > $LOG_PATH/applications.log 2>&1 &
 
 # 배포 결과 확인
