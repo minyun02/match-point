@@ -34,7 +34,15 @@ fi
 # 새 버전 배포
 echo "[5/6] Deploying new version..."
 cp $DEPLOY_PATH/build/libs/matchpoint-0.0.1-SNAPSHOT.jar $JAR_PATH
-nohup java -jar $JAR_PATH > $LOG_PATH/applications.log 2>&1 &
+nohup java \
+    -Dspring.config.location=classpath:/application.yml \
+    -DJWT_SECRET_KEY="${JWT_SECRET_KEY}" \
+    -DDB_URL="${DB_URL}" \
+    -DDB_USERNAME="${DB_USERNAME}" \
+    -DDB_PASSWORD="${DB_PASSWORD}" \
+    -DFIREBASE_CREDENTIALS_PATH="${FIREBASE_CREDENTIALS_PATH}" \
+    -DUPLOAD_PATH="${UPLOAD_PATH}" \
+    -jar $JAR_PATH > $LOG_PATH/applications.log 2>&1 &
 
 # 배포 결과 확인
 echo "[6/6] Verifying deployment..."
