@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.annotation.PostConstruct;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 @Configuration
 public class FirebaseConfig {
@@ -22,8 +22,7 @@ public class FirebaseConfig {
     @PostConstruct
     public void initailize() {
         try {
-            ClassPathResource resource = new ClassPathResource(credentialsPath);
-            InputStream serviceAccount = resource.getInputStream();
+            FileInputStream serviceAccount = new FileInputStream(credentialsPath);
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
