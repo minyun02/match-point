@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: matchpoint
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path:
+        /h2-console
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+
+uploadDirectory: ${UPLOAD_PATH}
+
+firebase:
+  credentials:
+    path: ${FIREBASE_CREDENTIALS_PATH}
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql: trace
+
+springdoc:
+  swagger-ui:
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: alpha
+  paths-to-match:
+    - /api/**
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
