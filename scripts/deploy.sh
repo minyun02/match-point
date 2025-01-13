@@ -12,7 +12,7 @@ DEPLOY_TIME=$(date +%Y%m%d_%H%M%S)
 # 현재 포트 확인
 echo "[2/8] Checking current port..."
 CURRENT_PORT=$(sudo netstat -tnlp | grep -E ':8080|:8081' | grep java | awk '{print substr($4,length($4)-3,4)}')
-if [ ${CURRENT_PORT} -eq 8080 ]; then
+if [ "${CURRENT_PORT}" -eq 8080 ]; then
   TARGET_PORT=8081
 else
   TARGET_PORT=8080
@@ -29,14 +29,14 @@ source $ENV_PATH
 # 이전 JAR 백업
 echo "[4/8] Backing up previous version..."
 if [ -f $JAR_PATH ]; then
-    mv $JAR_PATH $JAR_PATH.$DEPLOY_TIME
+    mv $JAR_PATH $JAR_PATH."$DEPLOY_TIME"
 fi
 
 # 기존 프로세스 종료
 echo "[5/8] Stopping current application..."
 TARGET_PID=$(pgrep -f ${APP_NAME}.*.jar.*${TARGET_PORT})
 if [ -n "$TARGET_PID" ]; then
-    kill -15 $TARGET_PID
+    kill -15 "$TARGET_PID"
     sleep 5
 fi
 
@@ -61,7 +61,7 @@ for RETRY in {1..10}; do
   if [[ $RESPONSE == *"UP"* ]]; then
     break
   fi
-  if [ $RETRY -eq 10 ]; then
+  if [ "$RETRY" -eq 10 ]; then
     echo "❌ Health check failed"
     exit 1
   fi
