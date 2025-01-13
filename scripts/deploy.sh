@@ -37,10 +37,10 @@ echo "[5/8] Stopping current application..."
 TARGET_PID=$(pgrep -f ${APP_NAME}.*.jar.*${TARGET_PORT})
 if [ -n "$TARGET_PID" ]; then
     kill -15 "$TARGET_PID"
-    while kill -0 "$TARGET_PID" 2>/dev/null; do
+    while ps -p "$TARGET_PID" 2>/dev/null; do
       echo "Waiting for application to terminate..."
       sleep 2
-    donne
+    done
     echo "Previous application terminated"
 fi
 
