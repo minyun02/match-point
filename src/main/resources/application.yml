@@ -11,11 +11,6 @@ spring:
         format_sql: true
         use_sql_comments: true
     show-sql: true
-  h2:
-    console:
-      enabled: true
-      path:
-        /h2-console
   datasource:
     url: ${DB_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -52,3 +47,12 @@ decorator:
   datasource:
     p6spy:
       enable-logging: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
