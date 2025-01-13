@@ -24,7 +24,7 @@ public class AuthenticationConfig {
     @Bean
     public WebSecurityCustomizer configure() {
         return (web -> web.ignoring()
-                .requestMatchers("h2-console/**", "/error", "/favicon.ico")
+                .requestMatchers("/error", "/favicon.ico")
         );
     }
 
