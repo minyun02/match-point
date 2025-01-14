@@ -34,7 +34,7 @@ fi
 
 # 기존 프로세스 종료
 echo "[5/8] Stopping current application..."
-TARGET_PID=$(pgrep -f "$APP_NAME.*.jar")
+TARGET_PID=$(pgrep -f "$APP_NAME")
 if [ -n "$TARGET_PID" ]; then
     kill -15 "$TARGET_PID"
     wait "$TARGET_PID" 2>/dev/null
@@ -69,7 +69,7 @@ for RETRY in {1..10}; do
 done
 
 echo "[8/8] Updating nginx configuration..."
-echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | sudo tee /etc/nginx/conf.d/service-url.inc
+echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | sudo tee /etc/nginx/default.d/service-url.inc
 sudo service nginx reload
 
 # 배포 결과 확인
