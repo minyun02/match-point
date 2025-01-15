@@ -36,7 +36,7 @@ public class AuthenticationConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/actuator/health").permitAll()
+                    .requestMatchers("/actuator/health", "/actuator/metrics", "/actuator/prometheus").permitAll()
                     .requestMatchers("/api/*/auth/refresh", "/api/*/auth/token", "/api/*/users/signup", "/api/*/users/login", "/api/*/users/token", "/api/*/users/provider", "/api/*/profiles/nickname").permitAll()
                     .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated()
