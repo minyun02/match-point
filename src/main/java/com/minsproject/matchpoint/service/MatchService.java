@@ -50,17 +50,6 @@ public class MatchService {
         SportProfile invitee = sportProfileService.getProfileById(request.getInviteeId());
 
         /*
-        TODO: 스포츠타입을 string으로 받는데 이걸 enum으로 받으면 처음부터 존재하는 스포츠타입인지 확인할수있지않을까?
-         */
-        boolean hasSportType = Arrays.stream(SportType.values())
-                .filter(sport -> sport.getName().equals(request.getSportType()))
-                .findFirst()
-                .isEmpty();
-        if (hasSportType) {
-            throw new MatchPointException(ErrorCode.SPORT_NOT_FOUND);
-        }
-
-        /*
         TODO: 2/26/25
             매칭 신청자와 수락자의 종목이 같은지 검사하는거니까 프로필 엔티티에게 이 역할을 맡겨야할거같다.
         */
