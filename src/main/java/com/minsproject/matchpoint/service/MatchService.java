@@ -30,6 +30,7 @@ public class MatchService {
     private final UserRepository userRepository;
     private final MatchRepository matchRepository;
     private final MatchResultRepository resultRepository;
+    private final SportProfileService sportProfileService;
     private final SportProfileRepository sportProfileRepository;
 
 
@@ -45,10 +46,12 @@ public class MatchService {
     }
 
     public Match createQuickMatch(QuickMatchCreate request) {
-        SportProfile inviter = sportProfileRepository.findById(request.getInviterId()).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
+        SportProfile inviter = sportProfileService.getProfileById(request.getInviterId());
+        SportProfile invitee = sportProfileService.getProfileById(request.getInviteeId());
 
-        SportProfile invitee = sportProfileRepository.findById(request.getInviteeId()).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
-
+        /*
+        TODO: 스포츠타입을 string으로 받는데 이걸 enum으로 받으면 처음부터 존재하는 스포츠타입인지 확인할수있지않을까?
+         */
         boolean hasSportType = Arrays.stream(SportType.values())
                 .filter(sport -> sport.getName().equals(request.getSportType()))
                 .findFirst()
@@ -57,6 +60,10 @@ public class MatchService {
             throw new MatchPointException(ErrorCode.SPORT_NOT_FOUND);
         }
 
+        /*
+        TODO: 2/26/25
+            매칭 신청자와 수락자의 종목이 같은지 검사하는거니까 프로필 엔티티에게 이 역할을 맡겨야할거같다.
+        */
         if (!StringUtils.equals(inviter.getSportType(), request.getSportType())) {
             throw new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE);
         }
