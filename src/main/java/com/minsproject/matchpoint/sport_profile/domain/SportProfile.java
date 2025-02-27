@@ -1,18 +1,22 @@
-package com.minsproject.matchpoint.entity;
+package com.minsproject.matchpoint.sport_profile.domain;
 
+import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.dto.request.SportProfileDTO;
+import com.minsproject.matchpoint.entity.BaseEntity;
+import com.minsproject.matchpoint.entity.User;
+import com.minsproject.matchpoint.exception.ErrorCode;
+import com.minsproject.matchpoint.exception.MatchPointException;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Builder
 @Entity
 @NoArgsConstructor
 @Getter
+@AllArgsConstructor
 public class SportProfile extends BaseEntity {
 
     @Id
@@ -27,7 +31,8 @@ public class SportProfile extends BaseEntity {
 
     @Setter private String nickname;
 
-    private String sportType;
+    @Enumerated(EnumType.STRING)
+    private SportType sportType;
 
     private String sido;
 
@@ -61,29 +66,6 @@ public class SportProfile extends BaseEntity {
 
     @Setter private Integer ranking;
 
-
-    @Builder
-    public SportProfile(Long id, User user, String nickname, String sportType, String sido, String sigungu, String dong, String detail, String fullAddress, Double latitude, Double longitude, String profileImage, Double mannerRate, Integer points, Integer totalMatches, Integer wins, Integer loses, Integer ranking) {
-        this.id = id;
-        this.user = user;
-        this.nickname = nickname;
-        this.sportType = sportType;
-        this.sido = sido;
-        this.sigungu = sigungu;
-        this.dong = dong;
-        this.detail = detail;
-        this.fullAddress = fullAddress;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.profileImage = profileImage;
-        this.mannerRate = mannerRate;
-        this.points = points;
-        this.totalMatches = totalMatches;
-        this.wins = wins;
-        this.loses = loses;
-        this.ranking = ranking;
-    }
-
     public void calculateWinRate() {
         if (wins + loses == 0) {
             this.winRate = BigDecimal.ZERO;
@@ -102,5 +84,11 @@ public class SportProfile extends BaseEntity {
         this.fullAddress = request.getFullAddress();
         this.latitude = request.getLatitude();
         this.longitude = request.getLongitude();
+    }
+
+    public void isSameSportType(SportType sportType) {
+        if (this.sportType != sportType) {
+            throw new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE);
+        }
     }
 }
