@@ -52,16 +52,17 @@ public class MatchService {
         inviter.validateSportType(request.getSportType());
         invitee.validateSportType(request.getSportType());
 
-        return matchRepository.save(
-            Match.createQuickMatch(
-                inviter,
-                invitee,
-                request.getSportType(),
-                MatchStatus.ACCEPTED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-            )
-        );
+        return matchRepository.save(Match.createQuickMatch(inviter, invitee));
+    }
+
+    public Match createMatch(MatchCreateRequest request) {
+        SportProfile inviter = sportProfileService.getProfileById(request.getInviterId());
+        SportProfile invitee = sportProfileService.getProfileById(request.getInviteeId());
+
+        inviter.validateSportType(request.getSportType());
+        invitee.validateSportType(request.getSportType());
+
+        return matchRepository.save(Match.createRegularMatch(inviter, invitee, request.getMatchDate()));
     }
 
     public Match getMatch(Long matchId) {
@@ -123,29 +124,5 @@ public class MatchService {
         }
 
         return true;
-    }
-
-    public Match createMatch(MatchCreateRequest request) {
-        SportProfile inviter = sportProfileRepository.findById(request.getInviterId()).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
-
-        if (!request.getSportType().getName().equals(inviter.getSportType())) {
-            throw new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE);
-        }
-
-        SportProfile invitee = sportProfileRepository.findById(request.getInviteeId()).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
-
-        if (!request.getSportType().getName().equals(invitee.getSportType())) {
-            throw new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE);
-        }
-
-        Match match = Match.builder()
-                .inviter(inviter)
-                .invitee(invitee)
-                .matchDate(request.getMatchDate())
-                .sportType(request.getSportType())
-                .status(MatchStatus.PENDING)
-                .build();
-
-        return matchRepository.save(match);
     }
 }
