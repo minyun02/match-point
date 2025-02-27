@@ -1,7 +1,8 @@
 package com.minsproject.matchpoint.dto.response;
 
+import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
-import com.minsproject.matchpoint.entity.SportProfile;
+import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,7 +15,7 @@ public class ProfileRecommendationResponse {
     private String nickname;
     private String profileImage;
 
-    private String sportType;
+    private SportType sportType;
     private BigDecimal winRate;
     private Double mannerRate;
     private Integer ranking;

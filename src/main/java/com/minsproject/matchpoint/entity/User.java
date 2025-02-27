@@ -2,6 +2,8 @@ package com.minsproject.matchpoint.entity;
 
 import com.minsproject.matchpoint.constant.role.UserRole;
 import com.minsproject.matchpoint.constant.status.UserStatus;
+import com.minsproject.matchpoint.constant.type.SportType;
+import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,7 +34,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String providerId;
 
-    @Setter private String currentSport;
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private SportType currentSport;
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
@@ -49,7 +53,16 @@ public class User extends BaseEntity {
     private List<SportProfile> sportProfiles;
 
     @Builder
-    public User(Long id, String email, String name, String provider, String providerId, String currentSport, UserRole role, UserStatus status, Timestamp lastLoginAt, List<SportProfile> sportProfiles) {
+    public User(Long id,
+                String email,
+                String name,
+                String provider,
+                String providerId,
+                SportType currentSport,
+                UserRole role,
+                UserStatus status,
+                Timestamp lastLoginAt,
+                List<SportProfile> sportProfiles) {
         this.id = id;
         this.email = email;
         this.name = name;

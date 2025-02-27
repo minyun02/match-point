@@ -1,7 +1,7 @@
 package com.minsproject.matchpoint.utils;
 
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
-import com.minsproject.matchpoint.entity.SportProfile;
+import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 
 public class ProfileSimilarityCalculator {
 

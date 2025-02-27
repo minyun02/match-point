@@ -1,7 +1,7 @@
 package com.minsproject.matchpoint.repository.querydsl;
 
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
-import com.minsproject.matchpoint.entity.SportProfile;
+import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
