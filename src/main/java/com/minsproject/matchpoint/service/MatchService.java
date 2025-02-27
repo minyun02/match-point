@@ -49,8 +49,8 @@ public class MatchService {
         SportProfile inviter = sportProfileService.getProfileById(request.getInviterId());
         SportProfile invitee = sportProfileService.getProfileById(request.getInviteeId());
 
-        inviter.isSameSportType(request.getSportType());
-        inviter.isSameSportType(invitee.getSportType());
+        inviter.validateSportType(request.getSportType());
+        inviter.validateSportType(invitee.getSportType());
 
         return matchRepository.save(
             Match.createQuickMatch(

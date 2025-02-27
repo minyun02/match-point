@@ -86,7 +86,7 @@ public class SportProfile extends BaseEntity {
         this.longitude = request.getLongitude();
     }
 
-    public void isSameSportType(SportType sportType) {
+    public void validateSportType(SportType sportType) {
         if (this.sportType != sportType) {
             throw new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE);
         }
