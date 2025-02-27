@@ -3,7 +3,7 @@ package com.minsproject.matchpoint.service;
 import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.dto.request.SportProfileDTO;
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
-import com.minsproject.matchpoint.entity.SportProfile;
+import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import com.minsproject.matchpoint.entity.User;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
@@ -70,7 +70,7 @@ public class SportProfileService {
         return sportProfileRepository.list(sportType, range, address, pageSize, lastId, sort);
     }
 
-    public long getLastRanking(String sportType) {
+    public long getLastRanking(SportType sportType) {
         return sportProfileRepository.count();
     }
 
@@ -119,7 +119,7 @@ public class SportProfileService {
     ) {
         SportProfile sportProfile = sportProfileRepository.findById(profileId).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
 
-        return sportProfileRepository.findProfileListForMatch(profileId, sportProfile.getSportType(), sportProfile.getLatitude(), sportProfile.getLongitude(), searchWord, sort, distance, lastId, pageSize);
+        return sportProfileRepository.findProfileListForMatch(profileId, sportProfile.getSportType().name(), sportProfile.getLatitude(), sportProfile.getLongitude(), searchWord, sort, distance, lastId, pageSize);
     }
 
     public List<ProfileWithInfo<SportProfile>> getRecommendations(Long profileId, Long lastId, Integer pageSize) {
@@ -127,7 +127,7 @@ public class SportProfileService {
 
         ProfileSimilarityCalculator calculator = new ProfileSimilarityCalculator();
 
-        List<ProfileWithInfo<SportProfile>> profileListForMatch = getProfileListForMatch(profileId, null, null, 10, lastId, pageSize);
+        List<ProfileWithInfo<SportProfile>> profileListForMatch = getProfileListForMatch(profileId, "", null, 10, lastId, pageSize);
 
         for (ProfileWithInfo<SportProfile> profile2 : profileListForMatch) {
             profile2.setSimilarity(calculator.calculateSimilarity(profile1, profile2));

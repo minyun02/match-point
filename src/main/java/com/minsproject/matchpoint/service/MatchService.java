@@ -7,7 +7,7 @@ import com.minsproject.matchpoint.dto.request.MatchResultRequest;
 import com.minsproject.matchpoint.dto.request.QuickMatchCreate;
 import com.minsproject.matchpoint.entity.Match;
 import com.minsproject.matchpoint.entity.MatchResult;
-import com.minsproject.matchpoint.entity.SportProfile;
+import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.MatchRepository;
@@ -49,23 +49,14 @@ public class MatchService {
         SportProfile inviter = sportProfileService.getProfileById(request.getInviterId());
         SportProfile invitee = sportProfileService.getProfileById(request.getInviteeId());
 
-        /*
-        TODO: 2/26/25
-            매칭 신청자와 수락자의 종목이 같은지 검사하는거니까 프로필 엔티티에게 이 역할을 맡겨야할거같다.
-        */
-        if (!StringUtils.equals(inviter.getSportType(), request.getSportType())) {
-            throw new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE);
-        }
-
-        if (!StringUtils.equals(inviter.getSportType(), invitee.getSportType())) {
-            throw new MatchPointException(ErrorCode.CANNOT_MATCH_WITH_PROFILE);
-        }
+        inviter.validateSportType(request.getSportType());
+        invitee.validateSportType(request.getSportType());
 
         return matchRepository.save(
             Match.createQuickMatch(
                 inviter,
                 invitee,
-                Arrays.stream(SportType.values()).filter(sportType -> StringUtils.equals(sportType.getName(), request.getSportType())).findFirst().get(),
+                request.getSportType(),
                 MatchStatus.ACCEPTED,
                 LocalDateTime.now(),
                 LocalDateTime.now()

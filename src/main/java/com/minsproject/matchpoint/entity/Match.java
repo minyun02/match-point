@@ -2,6 +2,7 @@ package com.minsproject.matchpoint.entity;
 
 import com.minsproject.matchpoint.constant.status.MatchStatus;
 import com.minsproject.matchpoint.constant.type.SportType;
+import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

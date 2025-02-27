@@ -1,5 +1,6 @@
 package com.minsproject.matchpoint.entity;
 
+import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,8 @@
 package com.minsproject.matchpoint.dto.response;
 
+import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
-import com.minsproject.matchpoint.entity.SportProfile;
+import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class SportProfileResponse {
     private Long id;
     private Long userId;
     private String nickname;
-    private String sportType;
+    private SportType sportType;
     private String sido;
     private String sigungu;
     private String dong;
@@ -33,7 +34,7 @@ public class SportProfileResponse {
     private Integer ranking;
     private Double distance;
 
-    private SportProfileResponse(Long id, Long userId, String nickname, String sportType, String sido, String sigungu, String dong, String detail, String fullAddress, Double latitude, Double longitude, String profileImage, Double mannerRate, Integer points, Integer totalMatches, Integer wins, Integer loses, BigDecimal winRate, Integer ranking) {
+    private SportProfileResponse(Long id, Long userId, String nickname, SportType sportType, String sido, String sigungu, String dong, String detail, String fullAddress, Double latitude, Double longitude, String profileImage, Double mannerRate, Integer points, Integer totalMatches, Integer wins, Integer loses, BigDecimal winRate, Integer ranking) {
         this.id = id;
         this.userId = userId;
         this.nickname = nickname;
@@ -55,7 +56,7 @@ public class SportProfileResponse {
         this.ranking = ranking;
     }
 
-    private SportProfileResponse(Long id, Long userId, String nickname, String sportType, String sido, String sigungu, String dong, String detail, String fullAddress, Double latitude, Double longitude, String profileImage, Double mannerRate, Integer points, Integer totalMatches, Integer wins, Integer loses, BigDecimal winRate, Integer ranking, Double distance) {
+    private SportProfileResponse(Long id, Long userId, String nickname, SportType sportType, String sido, String sigungu, String dong, String detail, String fullAddress, Double latitude, Double longitude, String profileImage, Double mannerRate, Integer points, Integer totalMatches, Integer wins, Integer loses, BigDecimal winRate, Integer ranking, Double distance) {
         this.id = id;
         this.userId = userId;
         this.nickname = nickname;
