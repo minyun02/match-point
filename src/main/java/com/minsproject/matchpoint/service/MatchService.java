@@ -31,8 +31,6 @@ public class MatchService {
     private final MatchRepository matchRepository;
     private final MatchResultRepository resultRepository;
     private final SportProfileService sportProfileService;
-    private final SportProfileRepository sportProfileRepository;
-
 
     public List<Match> list(Long userId, String sportType, String sort, Long lastId, Integer pageSize) {
         userRepository.findById(userId).orElseThrow(() -> new MatchPointException(ErrorCode.USER_NOT_FOUND));
