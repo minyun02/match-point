@@ -4,15 +4,14 @@ import com.minsproject.matchpoint.constant.status.MatchStatus;
 import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity(name = "matches")
 public class Match extends BaseEntity {
@@ -48,30 +47,24 @@ public class Match extends BaseEntity {
     @OneToOne(mappedBy = "match")
     private MatchResult result;
 
-    @Builder
-    private Match(SportProfile inviter, SportProfile invitee, SportType sportType, MatchStatus status, LocalDateTime matchDate, LocalDateTime acceptedAt) {
-        this.inviter = inviter;
-        this.invitee = invitee;
-        this.sportType = sportType;
-        this.status = status;
-        this.matchDate = matchDate;
-        this.acceptedAt = acceptedAt;
+    public static Match createQuickMatch(SportProfile inviter, SportProfile invitee) {
+        return Match.builder()
+                .inviter(inviter)
+                .invitee(invitee)
+                .sportType(inviter.getSportType())
+                .matchDate(LocalDateTime.now())
+                .status(MatchStatus.ACCEPTED)
+                .build();
     }
 
-    public static Match createQuickMatch(SportProfile inviter,
-                                         SportProfile invitee,
-                                         SportType sportType,
-                                         MatchStatus status,
-                                         LocalDateTime matchDate,
-                                         LocalDateTime acceptedAt) {
-        return new Match(
-                inviter,
-                invitee,
-                sportType,
-                status,
-                matchDate,
-                acceptedAt
-        );
+    public static Match createRegularMatch(SportProfile inviter, SportProfile invitee, LocalDateTime matchDate) {
+        return Match.builder()
+                .inviter(inviter)
+                .invitee(invitee)
+                .sportType(inviter.getSportType())
+                .matchDate(matchDate)
+                .status(MatchStatus.PENDING)
+                .build();
     }
 
     public void updateStatus(MatchStatus matchStatus) {
