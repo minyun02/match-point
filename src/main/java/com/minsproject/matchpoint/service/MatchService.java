@@ -3,6 +3,7 @@ package com.minsproject.matchpoint.service;
 import com.minsproject.matchpoint.constant.status.MatchStatus;
 import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.dto.request.MatchCreateRequest;
+import com.minsproject.matchpoint.dto.request.MatchListRequest;
 import com.minsproject.matchpoint.dto.request.MatchResultRequest;
 import com.minsproject.matchpoint.dto.request.QuickMatchCreate;
 import com.minsproject.matchpoint.entity.Match;
@@ -12,7 +13,6 @@ import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.MatchRepository;
 import com.minsproject.matchpoint.repository.MatchResultRepository;
-import com.minsproject.matchpoint.repository.SportProfileRepository;
 import com.minsproject.matchpoint.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,15 +32,15 @@ public class MatchService {
     private final MatchResultRepository resultRepository;
     private final SportProfileService sportProfileService;
 
-    public List<Match> list(Long userId, String sportType, String sort, Long lastId, Integer pageSize) {
-        userRepository.findById(userId).orElseThrow(() -> new MatchPointException(ErrorCode.USER_NOT_FOUND));
+    public List<Match> list(MatchListRequest request) {
+        userRepository.findById(request.getUserId()).orElseThrow(() -> new MatchPointException(ErrorCode.USER_NOT_FOUND));
 
         SportType selectedSportType = Arrays.stream(SportType.values())
-                .filter(type1 -> StringUtils.equals(type1.getName(), sportType))
+                .filter(type1 -> StringUtils.equals(type1.getName(), request.getSportType()))
                 .findFirst()
                 .orElse(null);
 
-        return matchRepository.list(userId, selectedSportType, sort, lastId, pageSize);
+        return matchRepository.list(request.getUserId(), selectedSportType, request.getSort(), request.getLastId(), request.getPageSize());
     }
 
     public Match createQuickMatch(QuickMatchCreate request) {
