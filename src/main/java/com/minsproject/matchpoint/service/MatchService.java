@@ -13,6 +13,7 @@ import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.MatchRepository;
 import com.minsproject.matchpoint.repository.MatchResultRepository;
+import com.minsproject.matchpoint.sport_profile.domain.SportProfiles;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,11 +32,9 @@ public class MatchService {
 
     public List<Match> list(MatchListRequest request) {
         User user = userService.getUserById(request.getUserId());
-        List<SportProfile> profiles = sportProfileService.getProfilesByUser(user);
-        profiles.stream()
-                .filter(profile -> profile.getSportType() == request.getSportType())
-                .findFirst()
-                .orElseThrow(() -> new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE));
+
+        SportProfiles profiles = new SportProfiles(sportProfileService.getProfilesByUser(user));
+        profiles.validateSportType(request.getSportType());
 
         return matchRepository.list(request);
     }
