@@ -11,7 +11,7 @@ public class SportProfiles {
     private final List<SportProfile> sportProfiles;
 
     public SportProfiles(List<SportProfile> sportProfiles) {
-        this.sportProfiles = sportProfiles;
+        this.sportProfiles = List.copyOf(sportProfiles);
     }
 
     public void validateSportType(SportType sportType) {
