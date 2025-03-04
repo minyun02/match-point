@@ -1,46 +1,43 @@
 package com.minsproject.matchpoint.service;
 
 import com.minsproject.matchpoint.constant.status.MatchStatus;
-import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.dto.request.MatchCreateRequest;
 import com.minsproject.matchpoint.dto.request.MatchListRequest;
 import com.minsproject.matchpoint.dto.request.MatchResultRequest;
 import com.minsproject.matchpoint.dto.request.QuickMatchCreate;
 import com.minsproject.matchpoint.entity.Match;
 import com.minsproject.matchpoint.entity.MatchResult;
+import com.minsproject.matchpoint.entity.User;
 import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.MatchRepository;
 import com.minsproject.matchpoint.repository.MatchResultRepository;
-import com.minsproject.matchpoint.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class MatchService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final MatchRepository matchRepository;
     private final MatchResultRepository resultRepository;
     private final SportProfileService sportProfileService;
 
     public List<Match> list(MatchListRequest request) {
-        userRepository.findById(request.getUserId()).orElseThrow(() -> new MatchPointException(ErrorCode.USER_NOT_FOUND));
-
-        SportType selectedSportType = Arrays.stream(SportType.values())
-                .filter(type1 -> StringUtils.equals(type1.getName(), request.getSportType()))
+        User user = userService.getUserById(request.getUserId());
+        List<SportProfile> profiles = sportProfileService.getProfilesByUser(user);
+        profiles.stream()
+                .filter(profile -> profile.getSportType() == request.getSportType())
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE));
 
-        return matchRepository.list(request.getUserId(), selectedSportType, request.getSort(), request.getLastId(), request.getPageSize());
+        return matchRepository.list(request);
     }
 
     public Match createQuickMatch(QuickMatchCreate request) {

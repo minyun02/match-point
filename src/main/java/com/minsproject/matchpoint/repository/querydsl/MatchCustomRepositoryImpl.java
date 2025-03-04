@@ -1,6 +1,7 @@
 package com.minsproject.matchpoint.repository.querydsl;
 
 import com.minsproject.matchpoint.constant.type.SportType;
+import com.minsproject.matchpoint.dto.request.MatchListRequest;
 import com.minsproject.matchpoint.entity.Match;
 import com.minsproject.matchpoint.entity.QMatch;
 import com.querydsl.core.types.OrderSpecifier;
@@ -20,17 +21,16 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Match> list(Long userId, SportType sportType, String sort, Long lastId, Integer pageSize) {
-
+    public List<Match> list(MatchListRequest request) {
         return queryFactory
                 .selectFrom(match)
                 .where(
-                    match.inviter.user.id.eq(userId).or(match.invitee.user.id.eq(userId)),
-                    sportTypeEq(sportType),
-                    idGt(lastId)
+                        match.inviter.user.id.eq(request.getUserId()).or(match.invitee.user.id.eq(request.getUserId())),
+                        sportTypeEq(request.getSportType()),
+                        idGt(request.getLastId())
                 )
-                .orderBy(createOrderSpecifier(sort, match))
-                .limit(pageSize)
+                .orderBy(createOrderSpecifier(request.getSort(), match))
+                .limit(request.getPageSize())
                 .fetch();
     }
 
