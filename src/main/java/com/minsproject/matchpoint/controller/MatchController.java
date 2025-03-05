@@ -45,9 +45,9 @@ public class MatchController {
 
     @PostMapping("/{matchId}/result")
     @Operation(summary = "매치 결과 입력")
-    @ApiResponse(responseCode = "200", description = "true를 반환한다.")
-    public boolean result(@PathVariable Long matchId, @RequestBody MatchResultRequest request) {
-        return matchService.result(matchId, request);
+    @ApiResponse(responseCode = "200")
+    public void result(@PathVariable Long matchId, @RequestBody MatchResultRequest request) {
+        matchService.result(matchId, request);
     }
 
     @PostMapping
