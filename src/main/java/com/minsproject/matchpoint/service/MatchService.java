@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -64,59 +63,17 @@ public class MatchService {
     }
 
     @Transactional
-    public boolean result(Long matchId, MatchResultRequest request) {
+    public void result(Long matchId, MatchResultRequest request) {
         Match match = matchRepository.findById(matchId).orElseThrow(() -> new MatchPointException(ErrorCode.MATCH_NOT_FOUND));
+        match.validateSubmitter(request.getSubmitterId());
+        match.validateSubmitCondition();
+        match.validateResultDuplication(request.getResult());
 
-        if (!(match.getStatus() == MatchStatus.ACCEPTED || match.getStatus() == MatchStatus.FINISHED)) {
-            throw new MatchPointException(ErrorCode.MATCH_STATUS_NOT_ALLOWED);
-        }
-
-        if (match.getMatchDate().isAfter(LocalDateTime.now())) {
-            throw new MatchPointException(ErrorCode.INVALID_MATCH_DAY);
-        }
-
-        if (!("win".equals(request.getResult()) || "lose".equals(request.getResult()))) {
-            throw new MatchPointException(ErrorCode.INVALID_MATCH_RESULT);
-        }
-
-        if (!(match.getInviter().getId() == request.getSubmitterId() || (match.getInvitee().getId() == request.getSubmitterId()))) {
-            throw new MatchPointException(ErrorCode.MATCH_RESULT_UNAUTHORIZED);
-        }
-
-        if (match.getResult() != null) {
-            if ("win".equals(request.getResult())) {
-                if (match.getResult().getWinner() != null) {
-                    throw new MatchPointException(ErrorCode.RESULT_ALREADY_SUBMITTED);
-                }
-            }
-
-            if ("lose".equals(request.getResult())) {
-                if (match.getResult().getLoser() != null) {
-                    throw new MatchPointException(ErrorCode.RESULT_ALREADY_SUBMITTED);
-                }
-            }
-        }
-
-        SportProfile submitter = match.getInviter().getId() == request.getSubmitterId() ? match.getInviter() : match.getInvitee();
-        MatchResult result;
-        if ("win".equals(request.getResult())) {
-            result = MatchResult.builder()
-                    .match(match)
-                    .winner(submitter)
-                    .build();
-        } else {
-            result = MatchResult.builder()
-                    .match(match)
-                    .loser(submitter)
-                    .build();
-        }
+        SportProfile submitter = match.returnSubmitterProfile(request.getSubmitterId());
+        MatchResult result = MatchResult.createFromResult(match, submitter, request.getResult());
 
         MatchResult saved = resultRepository.save(result);
 
-        if (saved.getWinner() != null && saved.getLoser() != null) {
-            match.updateStatus(MatchStatus.CONFIRMED);
-        }
-
-        return true;
+        saved.confirmMatchIfPossible();
     }
 }
