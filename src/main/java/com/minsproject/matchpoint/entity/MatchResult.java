@@ -1,5 +1,6 @@
 package com.minsproject.matchpoint.entity;
 
+import com.minsproject.matchpoint.constant.status.MatchStatus;
 import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -46,7 +47,9 @@ public class MatchResult extends BaseEntity {
         }
     }
 
-    public boolean canConfirmMatch() {
-        return this.winner != null && this.loser != null;
+    public void confirmMatchIfPossible() {
+        if (this.winner != null && this.loser != null) {
+            this.match.updateStatus(MatchStatus.CONFIRMED);
+        }
     }
 }

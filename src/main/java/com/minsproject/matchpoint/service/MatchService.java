@@ -74,8 +74,6 @@ public class MatchService {
 
         MatchResult saved = resultRepository.save(result);
 
-        if (saved.canConfirmMatch()) {
-            match.updateStatus(MatchStatus.CONFIRMED);
-        }
+        saved.confirmMatchIfPossible();
     }
 }
