@@ -1,6 +1,7 @@
 package com.minsproject.matchpoint.controller;
 
 import com.minsproject.matchpoint.dto.request.MatchCreateRequest;
+import com.minsproject.matchpoint.dto.request.MatchListRequest;
 import com.minsproject.matchpoint.dto.request.MatchResultRequest;
 import com.minsproject.matchpoint.dto.request.QuickMatchCreate;
 import com.minsproject.matchpoint.dto.response.MatchResponse;
@@ -22,13 +23,8 @@ public class MatchController {
     @GetMapping
     @Operation(summary = "사용자의 모든 매칭 목록 조회")
     @ApiResponse(responseCode = "200", description = "사용자의 모든 매칭을 배열로 반환한다.")
-    public List<MatchResponse> list(@RequestParam Long userId,
-                                    @RequestParam String sportType,
-                                    @RequestParam String sort,
-                                    @RequestParam Long lastId,
-                                    @RequestParam Integer pageSize
-    ) {
-        return matchService.list(userId, sportType, sort, lastId, pageSize).stream()
+    public List<MatchResponse> list(MatchListRequest request) {
+        return matchService.list(request).stream()
                 .map(MatchResponse::fromEntity)
                 .toList();
     }

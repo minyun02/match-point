@@ -137,4 +137,8 @@ public class SportProfileService {
                 .sorted(ProfileWithInfo.compareBySimilarity())
                 .toList();
     }
+
+    public List<SportProfile> getProfilesByUser(User user) {
+        return sportProfileRepository.findByUser(user).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
+    }
 }

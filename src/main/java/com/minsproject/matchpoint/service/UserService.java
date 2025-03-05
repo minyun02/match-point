@@ -87,4 +87,8 @@ public class UserService {
         return userRepository.findByEmailAndProvider(userToken.getEmail(), userToken.getProvider())
                 .orElseThrow(() -> new MatchPointException(ErrorCode.USER_NOT_FOUND));
     }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new MatchPointException(ErrorCode.USER_NOT_FOUND));
+    }
 }
