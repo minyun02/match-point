@@ -1,5 +1,6 @@
 package com.minsproject.matchpoint.repository.querydsl;
 
+import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
 import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import com.querydsl.core.Tuple;
@@ -13,15 +14,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.minsproject.matchpoint.entity.QSportProfile.sportProfile;
+import static com.minsproject.matchpoint.sport_profile.domain.QSportProfile.sportProfile;
 
 @RequiredArgsConstructor
 @Repository
 public class SportProfileCustomRepositoryImpl implements SportProfileCustomRepository{
 
     private final JPAQueryFactory queryFactory;
+
     @Override
-    public List<SportProfile> list(String sportType, String range, String address, Integer pageSize, Long lastId, String sort) {
+    public List<SportProfile> list(SportType sportType, String range, String address, Integer pageSize, Long lastId, String sort) {
         return queryFactory
                 .selectFrom(sportProfile)
                 .where(
@@ -35,7 +37,7 @@ public class SportProfileCustomRepositoryImpl implements SportProfileCustomRepos
     }
 
     @Override
-    public List<ProfileWithInfo<SportProfile>> findProfileListForMatch(Long profileId, String sportType, Double latitude, Double longitude, String searchWord, String sort, Integer distance, Long lastId, Integer pageSize) {
+    public List<ProfileWithInfo<SportProfile>> findProfileListForMatch(Long profileId, SportType sportType, Double latitude, Double longitude, String searchWord, String sort, Integer distance, Long lastId, Integer pageSize) {
 
         NumberTemplate<Double> distanceExpression = Expressions.numberTemplate(
                 Double.class,
@@ -65,6 +67,19 @@ public class SportProfileCustomRepositoryImpl implements SportProfileCustomRepos
                         null
                 ))
                 .toList();
+    }
+
+    @Override
+    public Integer findMaxRankingBySportType(SportType sportType) {
+        return queryFactory
+                .select(
+                        sportProfile.ranking.max()
+                )
+                .from(sportProfile)
+                .where(
+                        sportTypeEq(sportType)
+                )
+                .fetchOne();
     }
 
     private Predicate nickNameEq(String searchWord) {
@@ -102,7 +117,7 @@ public class SportProfileCustomRepositoryImpl implements SportProfileCustomRepos
         return lastId < 1 ? null : sportProfile.id.gt(lastId);
     }
 
-    private Predicate sportTypeEq(String sportType) {
+    private Predicate sportTypeEq(SportType sportType) {
         return sportType == null ? null : sportProfile.sportType.eq(sportType);
     }
 }
