@@ -54,7 +54,7 @@ public class SportProfileService {
         return sportProfileRepository.findById(profileId).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
     }
 
-    public List<SportProfile> getTopRankings(String sportType, String range, String address, Integer pageSize, Long lastId, String sort) {
+    public List<SportProfile> getTopRankings(SportType sportType, String range, String address, Integer pageSize, Long lastId, String sort) {
         boolean hasSportType = Arrays.stream(SportType.values())
                 .filter(sport -> sport.getName().equals(sportType))
                 .findFirst()
@@ -70,8 +70,9 @@ public class SportProfileService {
         return sportProfileRepository.list(sportType, range, address, pageSize, lastId, sort);
     }
 
-    public long getLastRanking(SportType sportType) {
-        return sportProfileRepository.count();
+    public Integer getMaxRanking(SportType sportType) {
+        Integer maxRanking = sportProfileRepository.findMaxRankingBySportType(sportType);
+        return maxRanking == null ? 1 : maxRanking + 1;
     }
 
     public boolean create(SportProfileDTO request, MultipartFile profileImage) {
@@ -80,7 +81,7 @@ public class SportProfileService {
         SportProfile profile = createProfile(request);
         profile.setUser(user);
 
-        long lastRanking = getLastRanking(request.getSportType());
+        long lastRanking = getMaxRanking(request.getSportType());
         if (lastRanking == 0) lastRanking = 1;
         profile.setRanking((int) lastRanking);
 
@@ -119,7 +120,7 @@ public class SportProfileService {
     ) {
         SportProfile sportProfile = sportProfileRepository.findById(profileId).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
 
-        return sportProfileRepository.findProfileListForMatch(profileId, sportProfile.getSportType().name(), sportProfile.getLatitude(), sportProfile.getLongitude(), searchWord, sort, distance, lastId, pageSize);
+        return sportProfileRepository.findProfileListForMatch(profileId, sportProfile.getSportType(), sportProfile.getLatitude(), sportProfile.getLongitude(), searchWord, sort, distance, lastId, pageSize);
     }
 
     public List<ProfileWithInfo<SportProfile>> getRecommendations(Long profileId, Long lastId, Integer pageSize) {

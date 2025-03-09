@@ -58,8 +58,7 @@ public class UserService {
         if (!request.getSportProfiles().isEmpty()) {
             SportProfileDTO newSportProfile = request.getSportProfiles().get(0);
 
-            long lastRanking = sportProfileService.getLastRanking(newSportProfile.getSportType());
-            if (lastRanking == 0) lastRanking = 1;
+            long lastRanking = sportProfileService.getMaxRanking(newSportProfile.getSportType());
 
             SportProfile savedProfile = sportProfileService.createProfile(newSportProfile);
             if (savedProfile == null) {
