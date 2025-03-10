@@ -1,6 +1,7 @@
 package com.minsproject.matchpoint.repository.querydsl;
 
 import com.minsproject.matchpoint.constant.type.SportType;
+import com.minsproject.matchpoint.dto.request.TopRankingRequest;
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
 import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import com.querydsl.core.Tuple;
@@ -23,16 +24,16 @@ public class SportProfileCustomRepositoryImpl implements SportProfileCustomRepos
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<SportProfile> list(SportType sportType, String range, String address, Integer pageSize, Long lastId, String sort) {
+    public List<SportProfile> list(TopRankingRequest request) {
         return queryFactory
                 .selectFrom(sportProfile)
                 .where(
-                        sportTypeEq(sportType),
-                        addressEq(range, address),
-                        idGt(lastId)
+                        sportTypeEq(request.getSportType()),
+                        addressEq(request.getRange(), request.getAddress()),
+                        idGt(request.getLastId())
                 )
-                .orderBy(createOrderSpecifier(sort))
-                .limit(pageSize)
+                .orderBy(createOrderSpecifier(request.getSort()))
+                .limit(request.getPageSize())
                 .fetch();
     }
 

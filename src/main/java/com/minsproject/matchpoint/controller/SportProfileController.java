@@ -1,6 +1,7 @@
 package com.minsproject.matchpoint.controller;
 
 import com.minsproject.matchpoint.dto.request.SportProfileDTO;
+import com.minsproject.matchpoint.dto.request.TopRankingRequest;
 import com.minsproject.matchpoint.dto.response.ProfileRecommendationResponse;
 import com.minsproject.matchpoint.dto.response.SportProfileResponse;
 import com.minsproject.matchpoint.service.SportProfileService;
@@ -36,13 +37,8 @@ public class SportProfileController {
     @GetMapping("/rankings")
     @Operation(summary = "해당 스포츠 순위 조회")
     @ApiResponse(responseCode = "200", description = "페이지 크기에 맞는 순위 목록을 반환한다.")
-    public List<SportProfileResponse> getTopRankings(@RequestParam String sportType,
-                                                     @RequestParam String range,
-                                                     @RequestParam String address,
-                                                     @RequestParam Integer pageSize,
-                                                     @RequestParam(required = false) Long lastId,
-                                                     @RequestParam(required = false) String sort) {
-        return sportProfileService.getTopRankings(sportType, range, address, pageSize, lastId, sort).stream()
+    public List<SportProfileResponse> getTopRankings(TopRankingRequest request) {
+        return sportProfileService.getTopRankings(request).stream()
                 .map(SportProfileResponse::fromEntity)
                 .toList();
     }
