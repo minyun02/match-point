@@ -2,6 +2,7 @@ package com.minsproject.matchpoint.service;
 
 import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.dto.request.SportProfileDTO;
+import com.minsproject.matchpoint.dto.request.TopRankingRequest;
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
 import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import com.minsproject.matchpoint.entity.User;
@@ -54,20 +55,8 @@ public class SportProfileService {
         return sportProfileRepository.findById(profileId).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
     }
 
-    public List<SportProfile> getTopRankings(SportType sportType, String range, String address, Integer pageSize, Long lastId, String sort) {
-        boolean hasSportType = Arrays.stream(SportType.values())
-                .filter(sport -> sport.getName().equals(sportType))
-                .findFirst()
-                .isEmpty();
-        if (hasSportType) {
-            throw new MatchPointException(ErrorCode.SPORT_NOT_FOUND);
-        }
-
-        if (pageSize <= 0) {
-            throw new MatchPointException(ErrorCode.INVALID_PAGE_SIZE);
-        }
-
-        return sportProfileRepository.list(sportType, range, address, pageSize, lastId, sort);
+    public List<SportProfile> getTopRankings(TopRankingRequest request) {
+        return sportProfileRepository.list(request);
     }
 
     public Integer getMaxRanking(SportType sportType) {
