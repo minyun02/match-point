@@ -9,6 +9,7 @@ import com.minsproject.matchpoint.entity.User;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.SportProfileRepository;
+import com.minsproject.matchpoint.sport_profile.presentation.dto.SportProfileUpdateRequest;
 import com.minsproject.matchpoint.utils.ProfileSimilarityCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -74,19 +75,9 @@ public class SportProfileService {
     }
 
     @Transactional
-    public SportProfile modify(Long profileId, SportProfileDTO request, MultipartFile profileImage) {
-        SportProfile sportProfile = sportProfileRepository.findById(profileId).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
-
-        sportProfile.setNickname(request.getNickname());
-
-        if (request.getFullAddress() != null) {
-            sportProfile.updateProfileAddress(request);
-        }
-
-        if (profileImage != null && !profileImage.isEmpty()) {
-            sportProfile.setProfileImage(fileService.uploadProfileImage(profileImage));
-        }
-
+    public SportProfile modify(Long profileId, SportProfileUpdateRequest request) {
+        SportProfile sportProfile = getProfileById(profileId);
+        sportProfile.updateProfile(request);
         return sportProfileRepository.save(sportProfile);
     }
 
