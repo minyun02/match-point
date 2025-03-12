@@ -9,14 +9,12 @@ import com.minsproject.matchpoint.entity.User;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.SportProfileRepository;
-import com.minsproject.matchpoint.repository.UserRepository;
 import com.minsproject.matchpoint.utils.ProfileSimilarityCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,7 +22,7 @@ import java.util.List;
 public class SportProfileService {
 
     private final FileService fileService;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final SportProfileRepository sportProfileRepository;
 
     public Boolean checkNicknameDuplication(String nickname) {
@@ -64,23 +62,15 @@ public class SportProfileService {
         return maxRanking == null ? 1 : maxRanking + 1;
     }
 
-    public boolean create(SportProfileDTO request, MultipartFile profileImage) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new MatchPointException(ErrorCode.USER_NOT_FOUND));
+    public SportProfile create(SportProfileDTO request, MultipartFile profileImage) {
+        User user = userService.getUserById(request.getUserId());
 
-        SportProfile profile = createProfile(request);
-        profile.setUser(user);
-
-        long lastRanking = getMaxRanking(request.getSportType());
-        if (lastRanking == 0) lastRanking = 1;
-        profile.setRanking((int) lastRanking);
-
+        SportProfile profile = SportProfile.createWithRanking(request, user, getMaxRanking(request.getSportType()));
         if (profileImage != null && !profileImage.isEmpty()) {
             profile.setProfileImage(fileService.uploadProfileImage(profileImage));
         }
 
-        sportProfileRepository.save(profile);
-
-        return true;
+        return sportProfileRepository.save(profile);
     }
 
     @Transactional
