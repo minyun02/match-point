@@ -5,6 +5,7 @@ import com.minsproject.matchpoint.dto.request.TopRankingRequest;
 import com.minsproject.matchpoint.dto.response.ProfileRecommendationResponse;
 import com.minsproject.matchpoint.dto.response.SportProfileResponse;
 import com.minsproject.matchpoint.service.SportProfileService;
+import com.minsproject.matchpoint.sport_profile.presentation.dto.SportProfileUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -52,15 +53,11 @@ public class SportProfileController {
         return SportProfileResponse.fromEntity(sportProfileService.create(request, profileImage));
     }
 
-    @PutMapping("/{profileId}")
+    @PatchMapping("/{profileId}")
     @Operation(summary = "프로필 수정")
     @ApiResponse(responseCode = "200", description = "수정된 프로필을 반환한다.")
-    public SportProfileResponse modify(
-            @PathVariable Long profileId,
-            @RequestPart("request") SportProfileDTO request,
-            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
-    ) {
-        return SportProfileResponse.fromEntity(sportProfileService.modify(profileId, request, profileImage));
+    public SportProfileResponse modify(@PathVariable Long profileId, @RequestBody SportProfileUpdateRequest request) {
+        return SportProfileResponse.fromEntity(sportProfileService.modify(profileId, request));
     }
 
     @GetMapping

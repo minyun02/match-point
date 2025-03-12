@@ -6,6 +6,7 @@ import com.minsproject.matchpoint.entity.BaseEntity;
 import com.minsproject.matchpoint.entity.User;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
+import com.minsproject.matchpoint.sport_profile.presentation.dto.SportProfileUpdateRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -96,7 +97,24 @@ public class SportProfile extends BaseEntity {
                 .divide(BigDecimal.valueOf(wins + loses), 1, RoundingMode.HALF_UP);
     }
 
-    public void updateProfileAddress(SportProfileDTO request) {
+    public void validateSportType(SportType sportType) {
+        if (this.sportType != sportType) {
+            throw new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE);
+        }
+    }
+
+    public void updateProfile(SportProfileUpdateRequest request) {
+        if (!request.getNickname().isEmpty()) {
+            this.nickname = request.getNickname();
+        }
+
+        if (!request.getFullAddress().isEmpty()) {
+            updateProfileAddress(request);
+        }
+
+    }
+
+    private void updateProfileAddress(SportProfileUpdateRequest request) {
         this.sido = request.getSido();
         this.sigungu = request.getSigungu();
         this.dong = request.getDong();
@@ -104,11 +122,5 @@ public class SportProfile extends BaseEntity {
         this.fullAddress = request.getFullAddress();
         this.latitude = request.getLatitude();
         this.longitude = request.getLongitude();
-    }
-
-    public void validateSportType(SportType sportType) {
-        if (this.sportType != sportType) {
-            throw new MatchPointException(ErrorCode.INCORRECT_SPORT_TYPE);
-        }
     }
 }
