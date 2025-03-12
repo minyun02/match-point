@@ -66,6 +66,26 @@ public class SportProfile extends BaseEntity {
 
     @Setter private Integer ranking;
 
+    public static SportProfile createWithRanking(SportProfileDTO request, User user, Integer ranking) {
+        return SportProfile.builder()
+                .user(user)
+                .sportType(request.getSportType())
+                .nickname(request.getNickname())
+                .sido(request.getSido())
+                .sigungu(request.getSigungu())
+                .dong(request.getDong())
+                .detail(request.getDetail())
+                .fullAddress(request.getFullAddress())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .wins(0)
+                .loses(0)
+                .totalMatches(0)
+                .mannerRate(5.0)
+                .ranking(ranking)
+                .build();
+    }
+
     public void calculateWinRate() {
         if (wins + loses == 0) {
             this.winRate = BigDecimal.ZERO;

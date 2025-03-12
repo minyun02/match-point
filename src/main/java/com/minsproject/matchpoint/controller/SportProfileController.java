@@ -46,10 +46,10 @@ public class SportProfileController {
     @PostMapping
     @Operation(summary = "새로운 프로필 추가")
     @ApiResponse(responseCode = "200", description = "생성 성공 boolean 값을 반환한다.")
-    public boolean create(@RequestPart("request") SportProfileDTO request,
+    public SportProfileResponse create(@RequestPart("request") SportProfileDTO request,
                           @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
     ) {
-        return sportProfileService.create(request, profileImage);
+        return SportProfileResponse.fromEntity(sportProfileService.create(request, profileImage));
     }
 
     @PutMapping("/{profileId}")
