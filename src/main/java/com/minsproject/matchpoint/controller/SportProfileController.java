@@ -49,7 +49,7 @@ public class SportProfileController {
     @Operation(summary = "새로운 프로필 추가")
     @ApiResponse(responseCode = "200", description = "생성 성공 boolean 값을 반환한다.")
     public SportProfileResponse create(@RequestPart("request") SportProfileDTO request,
-                          @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
+                                       @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
     ) {
         return SportProfileResponse.fromEntity(sportProfileService.create(request, profileImage));
     }
@@ -74,12 +74,11 @@ public class SportProfileController {
     @GetMapping("/recommendations")
     @Operation(summary = "매칭 추천 목록")
     @ApiResponse(responseCode = "200", description = "매칭 추천 목록을 반환한다.")
-    public List<ProfileRecommendationResponse> getRecommendations(
-            @RequestParam Long profileId,
-            @RequestParam Long lastId,
-            @RequestParam Integer pageSize
-    ) {
-        return sportProfileService.getRecommendations(profileId, lastId, pageSize).stream()
+    public List<ProfileRecommendationResponse> getRecommendations(@RequestParam Long profileId,
+                                                                  @RequestParam Integer distance,
+                                                                  @RequestParam Integer pageSize
+                                                                  ) {
+        return sportProfileService.getRecommendations(profileId, distance, pageSize).stream()
                 .map(ProfileRecommendationResponse::fromEntity)
                 .toList();
     }

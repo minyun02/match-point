@@ -9,7 +9,7 @@ public class ProfileSimilarityCalculator {
     private static final double SKILL_WEIGHT = 0.35;
     private static final double MANNER_WEIGHT = 0.25;
 
-    public double calculateSimilarity(SportProfile profile1, ProfileWithInfo profile2) {
+    public double calculateSimilarity(SportProfile profile1, ProfileWithInfo<SportProfile> profile2) {
         double locationSimilarity = calculateLocationSimilarity(profile1, profile2.getDistance());
         double skillSimilarity = calculateSkillSimilarity(profile1, (SportProfile) profile2.getEntity());
         double mannerSimilarity = calculateMannerSimilarity(profile1, (SportProfile) profile2.getEntity());

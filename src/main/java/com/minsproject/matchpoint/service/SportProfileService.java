@@ -4,6 +4,7 @@ import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.dto.request.SportProfileDTO;
 import com.minsproject.matchpoint.dto.request.TopRankingRequest;
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
+import com.minsproject.matchpoint.sport_profile.domain.RecommendedProfiles;
 import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
 import com.minsproject.matchpoint.entity.User;
 import com.minsproject.matchpoint.exception.ErrorCode;
@@ -11,7 +12,6 @@ import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.SportProfileRepository;
 import com.minsproject.matchpoint.sport_profile.presentation.dto.ProfileSearchDTO;
 import com.minsproject.matchpoint.sport_profile.presentation.dto.SportProfileUpdateRequest;
-import com.minsproject.matchpoint.utils.ProfileSimilarityCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,20 +93,24 @@ public class SportProfileService {
         );
     }
 
-    public List<ProfileWithInfo<SportProfile>> getRecommendations(Long profileId, Long lastId, Integer pageSize) {
-        SportProfile profile1 = sportProfileRepository.findById(profileId).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
+    public List<ProfileWithInfo<SportProfile>> getRecommendations(Long profileId, Integer distance, Integer pageSize) {
+        SportProfile sportProfile = getProfileById(profileId);
 
-        ProfileSimilarityCalculator calculator = new ProfileSimilarityCalculator();
+        List<ProfileWithInfo<SportProfile>> profileListForMatch = sportProfileRepository.findProfileListForMatch(
+                ProfileSearchDTO.createForRecommendations(profileId, distance, pageSize),
+                sportProfile.getSportType(),
+                sportProfile.getLatitude(),
+                sportProfile.getLongitude()
+        );
 
-        List<ProfileWithInfo<SportProfile>> profileListForMatch = getProfileListForMatch(profileId);
-
-        for (ProfileWithInfo<SportProfile> profile2 : profileListForMatch) {
-            profile2.setSimilarity(calculator.calculateSimilarity(profile1, profile2));
+        if (profileListForMatch.isEmpty()) {
+            return profileListForMatch;
         }
 
-        return profileListForMatch.stream()
-                .sorted(ProfileWithInfo.compareBySimilarity())
-                .toList();
+        RecommendedProfiles recommendedProfiles = new RecommendedProfiles(profileListForMatch);
+        recommendedProfiles.createRecommendations(sportProfile);
+
+        return recommendedProfiles.sortInSimilarity();
     }
 
     public List<SportProfile> getProfilesByUser(User user) {

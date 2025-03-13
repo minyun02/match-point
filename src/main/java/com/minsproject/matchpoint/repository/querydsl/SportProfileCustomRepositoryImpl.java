@@ -116,7 +116,7 @@ public class SportProfileCustomRepositoryImpl implements SportProfileCustomRepos
     }
 
     private Predicate idGt(Long lastId) {
-        return lastId < 1 ? null : sportProfile.id.gt(lastId);
+        return (lastId == null || lastId < 1) ? null : sportProfile.id.gt(lastId);
     }
 
     private Predicate sportTypeEq(SportType sportType) {
