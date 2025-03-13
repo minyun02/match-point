@@ -9,6 +9,7 @@ import com.minsproject.matchpoint.entity.User;
 import com.minsproject.matchpoint.exception.ErrorCode;
 import com.minsproject.matchpoint.exception.MatchPointException;
 import com.minsproject.matchpoint.repository.SportProfileRepository;
+import com.minsproject.matchpoint.sport_profile.presentation.dto.ProfileSearchDTO;
 import com.minsproject.matchpoint.sport_profile.presentation.dto.SportProfileUpdateRequest;
 import com.minsproject.matchpoint.utils.ProfileSimilarityCalculator;
 import lombok.RequiredArgsConstructor;
@@ -81,16 +82,15 @@ public class SportProfileService {
         return sportProfileRepository.save(sportProfile);
     }
 
-    public List<ProfileWithInfo<SportProfile>> getProfileListForMatch(Long profileId,
-                                                                      String searchWord,
-                                                                      String sort,
-                                                                      Integer distance,
-                                                                      Long lastId,
-                                                                      Integer pageSize
-    ) {
-        SportProfile sportProfile = sportProfileRepository.findById(profileId).orElseThrow(() -> new MatchPointException(ErrorCode.PROFILE_NOT_FOUND));
+    public List<ProfileWithInfo<SportProfile>> getProfileListForMatch(ProfileSearchDTO searchDTO) {
+        SportProfile sportProfile = getProfileById(searchDTO.getProfileId());
 
-        return sportProfileRepository.findProfileListForMatch(profileId, sportProfile.getSportType(), sportProfile.getLatitude(), sportProfile.getLongitude(), searchWord, sort, distance, lastId, pageSize);
+        return sportProfileRepository.findProfileListForMatch(
+                searchDTO,
+                sportProfile.getSportType(),
+                sportProfile.getLatitude(),
+                sportProfile.getLongitude()
+        );
     }
 
     public List<ProfileWithInfo<SportProfile>> getRecommendations(Long profileId, Long lastId, Integer pageSize) {
@@ -98,7 +98,7 @@ public class SportProfileService {
 
         ProfileSimilarityCalculator calculator = new ProfileSimilarityCalculator();
 
-        List<ProfileWithInfo<SportProfile>> profileListForMatch = getProfileListForMatch(profileId, "", null, 10, lastId, pageSize);
+        List<ProfileWithInfo<SportProfile>> profileListForMatch = getProfileListForMatch(profileId);
 
         for (ProfileWithInfo<SportProfile> profile2 : profileListForMatch) {
             profile2.setSimilarity(calculator.calculateSimilarity(profile1, profile2));

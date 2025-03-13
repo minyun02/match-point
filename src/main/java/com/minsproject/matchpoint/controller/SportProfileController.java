@@ -5,6 +5,7 @@ import com.minsproject.matchpoint.dto.request.TopRankingRequest;
 import com.minsproject.matchpoint.dto.response.ProfileRecommendationResponse;
 import com.minsproject.matchpoint.dto.response.SportProfileResponse;
 import com.minsproject.matchpoint.service.SportProfileService;
+import com.minsproject.matchpoint.sport_profile.presentation.dto.ProfileSearchDTO;
 import com.minsproject.matchpoint.sport_profile.presentation.dto.SportProfileUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -63,14 +64,8 @@ public class SportProfileController {
     @GetMapping
     @Operation(summary = "매칭 가능한 프로필 목록 조회")
     @ApiResponse(responseCode = "200", description = "검색 조건에 맞는 프로필 목록을 반환한다.")
-    public List<SportProfileResponse> getMatchableProfileList(@RequestParam Long profileId,
-                                                              @RequestParam String searchWord,
-                                                              @RequestParam String sort,
-                                                              @RequestParam Integer distance,
-                                                              @RequestParam Long lastId,
-                                                              @RequestParam Integer pageSize
-    ) {
-        return sportProfileService.getProfileListForMatch(profileId, searchWord, sort, distance, lastId, pageSize)
+    public List<SportProfileResponse> getMatchableProfileList(ProfileSearchDTO searchDTO) {
+        return sportProfileService.getProfileListForMatch(searchDTO)
                 .stream()
                 .map(SportProfileResponse::of)
                 .toList();

@@ -4,6 +4,7 @@ import com.minsproject.matchpoint.constant.type.SportType;
 import com.minsproject.matchpoint.dto.request.TopRankingRequest;
 import com.minsproject.matchpoint.entity.ProfileWithInfo;
 import com.minsproject.matchpoint.sport_profile.domain.SportProfile;
+import com.minsproject.matchpoint.sport_profile.presentation.dto.ProfileSearchDTO;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -38,7 +39,7 @@ public class SportProfileCustomRepositoryImpl implements SportProfileCustomRepos
     }
 
     @Override
-    public List<ProfileWithInfo<SportProfile>> findProfileListForMatch(Long profileId, SportType sportType, Double latitude, Double longitude, String searchWord, String sort, Integer distance, Long lastId, Integer pageSize) {
+    public List<ProfileWithInfo<SportProfile>> findProfileListForMatch(ProfileSearchDTO searchDTO, SportType sportType, Double latitude, Double longitude) {
 
         NumberTemplate<Double> distanceExpression = Expressions.numberTemplate(
                 Double.class,
@@ -52,13 +53,13 @@ public class SportProfileCustomRepositoryImpl implements SportProfileCustomRepos
                 .from(sportProfile)
                 .where(
                         sportTypeEq(sportType),
-                        nickNameEq(searchWord),
-                        idGt(lastId),
-                        distanceExpression.loe(distance),
-                        sportProfile.id.ne(profileId)
+                        nickNameEq(searchDTO.getSearchWord()),
+                        idGt(searchDTO.getLastId()),
+                        distanceExpression.loe(searchDTO.getDistance()),
+                        sportProfile.id.ne(searchDTO.getProfileId())
                 )
-                .orderBy(createOrderSpecifier(sort))
-                .limit(pageSize)
+                .orderBy(createOrderSpecifier(searchDTO.getSort()))
+                .limit(searchDTO.getPageSize())
                 .fetch();
 
         return results.stream()
